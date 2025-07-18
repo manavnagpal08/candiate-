@@ -18,6 +18,7 @@ import pdfplumber # For PDF text extraction
 from weasyprint import HTML # For PDF certificate generation
 import traceback # For detailed error logging
 import plotly.express as px # For dashboard histogram
+import uuid # Import uuid for certificate IDs
 
 # CRITICAL: Disable Hugging Face tokenizers parallelism to avoid deadlocks
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
@@ -1170,7 +1171,6 @@ def process_single_resume_for_candidate_app(file_name, file_bytes, file_type, jd
         )
 
         # 6. Certificate & Tagging
-        import uuid # Import uuid here as it's used
         certificate_id = str(uuid.uuid4())
         certificate_rank = "Not Applicable"
 
@@ -1419,6 +1419,147 @@ def generate_certificate_pdf(html_content):
     except Exception as e:
         st.error(f"❌ Failed to generate PDF certificate: {e}")
         return None
+
+# --- User Authentication and Data Management ---
+
+def load_candidate_users_local():
+    """Loads candidate user data from a local JSON file."""
+    if os.path.exists(USER_DB_FILE_CANDIDATE):
+        with open(USER_DB_FILE_CANDIDATE, "r") as f:
+            return json.load(f)
+    return {}
+
+def save_candidate_users_local(users):
+    """Saves candidate user data to a local JSON file."""
+    with open(USER_DB_FILE_CANDIDATE, "w") as f:
+        json.dump(users, f, indent=4)
+
+def load_candidate_screening_history_local():
+    """Loads candidate screening history from a local JSON file."""
+    if os.path.exists(CANDIDATE_HISTORY_FILE):
+        with open(CANDIDATE_HISTORY_FILE, "r") as f:
+            return json.load(f)
+    return []
+
+def save_candidate_screening_result_local(user_email, result):
+    """Saves a single screening result to the candidate's local history."""
+    history = load_candidate_screening_history_local()
+    result_with_timestamp = result.copy()
+    result_with_timestamp['timestamp'] = datetime.now().isoformat()
+    result_with_timestamp['user_email'] = user_email # Link result to user
+    history.append(result_with_timestamp)
+    with open(CANDIDATE_HISTORY_FILE, "w") as f:
+        json.dump(history, f, indent=4)
+
+def load_top_candidates_leaderboard_local():
+    """Loads top candidates data from a local JSON file."""
+    if os.path.exists(CANDIDATE_LEADERBOARD_FILE):
+        with open(CANDIDATE_LEADERBOARD_FILE, "r") as f:
+            return json.load(f)
+    return []
+
+def update_top_candidates_leaderboard_local(candidate_name, score, user_email):
+    """
+    Updates the local top candidates leaderboard.
+    Keeps only the top 10 unique candidates by name.
+    """
+    leaderboard = load_top_candidates_leaderboard_local()
+    
+    # Remove existing entry for this candidate to update their score
+    leaderboard = [entry for entry in leaderboard if entry.get('Candidate Name') != candidate_name]
+
+    # Add the new entry
+    new_entry = {
+        "Candidate Name": candidate_name,
+        "Score (%)": score,
+        "Timestamp": datetime.now().isoformat(),
+        "user_email": user_email # Store user email for accountability
+    }
+    leaderboard.append(new_entry)
+
+    # Sort by score (descending) and timestamp (descending for ties)
+    leaderboard.sort(key=lambda x: (x.get('Score (%)', 0), x.get('Timestamp', '')), reverse=True)
+    
+    # Keep only the top 10 unique candidates
+    unique_candidates = []
+    seen_names = set()
+    for entry in leaderboard:
+        if entry.get('Candidate Name') not in seen_names:
+            unique_candidates.append(entry)
+            seen_names.add(entry.get('Candidate Name'))
+        if len(unique_candidates) >= 10: # Keep top 10 unique
+            break
+    
+    with open(CANDIDATE_LEADERBOARD_FILE, "w") as f:
+        json.dump(unique_candidates, f, indent=4)
+
+
+def candidate_login_section():
+    """Handles user login and registration for candidates."""
+    st.sidebar.subheader("🔒 Candidate Login / Register")
+
+    if 'candidate_authenticated' not in st.session_state:
+        st.session_state.candidate_authenticated = False
+    if 'candidate_username' not in st.session_state:
+        st.session_state.candidate_username = None
+
+    if st.session_state.candidate_authenticated:
+        return True
+
+    login_tab, register_tab = st.sidebar.tabs(["Login", "Register"])
+
+    with login_tab:
+        st.markdown("#### Existing User Login")
+        username = st.text_input("Email", key="login_email_candidate")
+        password = st.text_input("Password", type="password", key="login_password_candidate")
+
+        if st.button("Login", key="login_button_candidate"):
+            users = load_candidate_users_local()
+            if username in users:
+                hashed_password = users[username]['password']
+                if bcrypt.checkpw(password.encode('utf-8'), hashed_password.encode('utf-8')):
+                    st.session_state.candidate_authenticated = True
+                    st.session_state.candidate_username = username
+                    st.sidebar.success(f"Welcome back, {username}!")
+                    st.rerun()
+                else:
+                    st.sidebar.error("Incorrect password.")
+            else:
+                st.sidebar.error("User not found. Please register or check your email.")
+
+    with register_tab:
+        st.markdown("#### New User Registration")
+        new_username = st.text_input("Email (for registration)", key="register_email_candidate")
+        new_password = st.text_input("Password (for registration)", type="password", key="register_password_candidate")
+        confirm_password = st.text_input("Confirm Password", type="password", key="confirm_password_candidate")
+
+        if st.button("Register", key="register_button_candidate"):
+            if new_username and new_password and confirm_password:
+                if new_password == confirm_password:
+                    users = load_candidate_users_local()
+                    if new_username not in users:
+                        hashed_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+                        users[new_username] = {'password': hashed_password}
+                        save_candidate_users_local(users)
+                        st.sidebar.success("Registration successful! You can now log in.")
+                    else:
+                        st.sidebar.warning("Email already registered. Please log in.")
+                else:
+                    st.sidebar.error("Passwords do not match.")
+            else:
+                st.sidebar.error("Please fill in all registration fields.")
+    return st.session_state.candidate_authenticated
+
+# --- Helper function to load JDs ---
+def load_jds_from_folder(folder_path):
+    jds = {}
+    if os.path.exists(folder_path):
+        for filename in os.listdir(folder_path):
+            if filename.endswith(".txt"):
+                file_path = os.path.join(folder_path, filename)
+                with open(file_path, "r", encoding="utf-8") as f:
+                    jds[filename.replace(".txt", "").replace("_", " ").title()] = f.read()
+    return jds
 
 # --- Candidate Resume Screener Page ---
 def candidate_screener_page():
