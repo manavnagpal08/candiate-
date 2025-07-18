@@ -39,6 +39,7 @@ USER_DB_FILE_CANDIDATE = "candidate_users.json" # Separate user database for can
 CANDIDATE_HISTORY_FILE = "candidate_screening_history.json"
 CANDIDATE_LEADERBOARD_FILE = "candidate_leaderboard.json"
 JD_FOLDER = "data" # Folder where JDs are stored
+STYLE_CSS_FILE = "style.css" # Path to the CSS file
 
 # Ensure the JD folder exists and create a dummy JD if empty
 if not os.path.exists(JD_FOLDER):
@@ -499,7 +500,7 @@ def extract_name(text):
     if potential_name_lines:
         name = max(potential_name_lines, key=len) # Take the longest potential name
         # Clean up common resume section headers if they accidentally get picked
-        name = re.sub(r'summary|education|experience|skills|projects|certifications|profile|contact', '', name, flags=re.IGNORECASE).strip()
+        name = re.sub(r'summary|education|experience|skills|certifications|profile|contact', '', name, flags=re.IGNORECASE).strip()
         name = re.sub(r'^[^\w\s]+|[^\w\s]+$', '', name).strip() # Remove leading/trailing non-alphanumeric
         if name:
             return name.title()
@@ -1423,12 +1424,12 @@ def generate_certificate_pdf(html_content):
 # Modified send_certificate_email for candidate_app.py (actual sending)
 def send_certificate_email(recipient_email, candidate_name, score, certificate_id, certificate_pdf_content, gmail_address, gmail_app_password):
     if not recipient_email or recipient_email == "Not Found":
-        st.error(f"❌ Cannot send certificate: Email address not found for {candidate_name}.")
+        # st.error(f"❌ Cannot send certificate: Email address not found for {candidate_name}.") # Handled by caller
         return False
     
     if not gmail_address or not gmail_app_password:
-        st.error("❌ Email sending is not configured. Please ensure your Gmail address and App Password secrets are set in Streamlit.")
-        st.info("Refer to the instructions in the code for setting up Gmail App Passwords.")
+        # st.error("❌ Email sending is not configured. Please ensure your Gmail address and App Password secrets are set in Streamlit.") # Handled by caller
+        # st.info("Refer to the instructions in the code for setting up Gmail App Passwords.") # Handled by caller
         return False
 
     certificate_link = f"{CERTIFICATE_HOSTING_URL}/{certificate_id}.html" # Assuming ID maps to a hosted HTML
@@ -1483,25 +1484,28 @@ If you have any questions, please contact us.
             encoders.encode_base64(attachment)
             attachment.add_header('Content-Disposition', 'attachment', filename=f'ScreenerPro_Certificate_{candidate_name.replace(" ", "_")}.pdf')
             msg.attach(attachment)
-            st.info(f"Attached certificate PDF to email for {candidate_name}.")
+            # st.info(f"Attached certificate PDF to email for {candidate_name}.") # Removed for spinner
         except Exception as e:
-            st.error(f"Failed to attach certificate PDF: {e}")
+            # st.error(f"Failed to attach certificate PDF: {e}") # Removed for spinner
+            return False # Indicate failure if attachment fails
     else:
-        st.warning("No PDF content generated to attach to email.")
+        # st.warning("No PDF content generated to attach to email.") # Removed for spinner
+        pass # Continue even if PDF attachment fails, email might still send without it
 
     try:
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
             smtp.login(gmail_address, gmail_app_password)
             smtp.send_message(msg)
-        st.success(f"✅ Certificate email sent to {recipient_email}!")
+        # st.success(f"✅ Certificate email sent to {recipient_email}!") # Removed for spinner
         return True
     except smtplib.SMTPAuthenticationError:
-        st.error("❌ Failed to send email: Authentication error. Please check your Gmail address and App Password.")
-        st.info("Ensure you have generated an App Password for your Gmail account and used it instead of your regular password.")
+        # st.error("❌ Failed to send email: Authentication error. Please check your Gmail address and App Password.") # Removed for spinner
+        # st.info("Ensure you have generated an App Password for your Gmail account and used it instead of your regular password.") # Removed for spinner
+        return False
     except Exception as e:
-        st.error(f"❌ Failed to send email: {e}")
+        # st.error(f"❌ Failed to send email: {e}") # Removed for spinner
         traceback.print_exc() # Print full traceback for debugging
-    return False
+        return False
 
 
 # --- User Authentication and Data Management ---
@@ -1647,7 +1651,7 @@ def load_jds_from_folder(folder_path):
 
 # --- Candidate Resume Screener Page ---
 def candidate_screener_page():
-    st.markdown("<h2 style='text-align: center; color: #00cec9;'>📄 AI Resume Matcher</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 class='centered-header'>📄 AI Resume Matcher</h2>", unsafe_allow_html=True)
     st.info("Upload your resume and select a job description (JD) or paste your own to see how well you match!")
 
     # Load available JDs
@@ -1751,7 +1755,7 @@ def candidate_screener_page():
 
                 st.markdown("</div>", unsafe_allow_html=True) # Close center div
 
-                st.markdown("<h3 style='text-align: center; color: #00cec9;'>✨ Your Resume Analysis Results:</h3>", unsafe_allow_html=True)
+                st.markdown("<h3 class='centered-header'>✨ Your Resume Analysis Results:</h3>", unsafe_allow_html=True)
 
                 col_score, col_exp, col_cgpa = st.columns(3)
                 col_score.metric("Your Match Score", f"{screening_result['Score (%)']:.2f}%", help="How well your resume matches the job description.")
@@ -1795,16 +1799,22 @@ def candidate_screener_page():
 
                     col_cert_email, col_cert_dl = st.columns(2)
                     with col_cert_email:
+                        # Modified email sending logic with spinner and messages
                         if st.button("📧 Send Certificate to Email", key="send_cert_email_button"):
-                            send_certificate_email(
-                                recipient_email=screening_result['Email'],
-                                candidate_name=screening_result['Candidate Name'],
-                                score=screening_result['Score (%)'],
-                                certificate_id=screening_result['Certificate ID'], # Pass certificate_id
-                                certificate_pdf_content=certificate_pdf_content, # Pass PDF content
-                                gmail_address=st.secrets.get("GMAIL_ADDRESS"), # Get from secrets
-                                gmail_app_password=st.secrets.get("GMAIL_APP_PASSWORD") # Get from secrets
-                            )
+                            with st.spinner("Sending certificate email..."):
+                                email_sent_successfully = send_certificate_email(
+                                    recipient_email=screening_result['Email'],
+                                    candidate_name=screening_result['Candidate Name'],
+                                    score=screening_result['Score (%)'],
+                                    certificate_id=screening_result['Certificate ID'], # Pass certificate_id
+                                    certificate_pdf_content=certificate_pdf_content, # Pass PDF content
+                                    gmail_address=st.secrets.get("GMAIL_ADDRESS"), # Get from secrets
+                                    gmail_app_password=st.secrets.get("GMAIL_APP_PASSWORD") # Get from secrets
+                                )
+                                if email_sent_successfully:
+                                    st.success(f"✅ Certificate email sent to {screening_result['Email']}!")
+                                else:
+                                    st.error(f"❌ Failed to send certificate email to {screening_result['Email']}. Please check your email address and Streamlit secrets.")
                     with col_cert_dl:
                         if certificate_pdf_content:
                             st.download_button(
@@ -1823,7 +1833,7 @@ def candidate_screener_page():
                         f"I just scored {screening_result.get('Score (%)', 0):.2f}% on the ScreenerPro AI Resume Match! 🎉 Check out my certificate and try it yourself: {APP_BASE_URL} #ScreenerPro #ResumeMatch #JobSearch"
                     )
                     linkedin_share_url = f"https://www.linkedin.com/shareArticle?mini=true&url={urllib.parse.quote(APP_BASE_URL)}&title={urllib.parse.quote('ScreenerPro AI Match Certificate')}&summary={linkedin_share_text}"
-                    st.markdown(f'<a href="{linkedin_share_url}" target="_blank" style="display: inline-block; padding: 10px 20px; background-color: #0A66C2; color: white; border-radius: 8px; text-decoration: none; font-weight: 600;">Share on LinkedIn</a>', unsafe_allow_html=True)
+                    st.markdown(f'<a href="{linkedin_share_url}" target="_blank" class="link-button linkedin">Share on LinkedIn</a>', unsafe_allow_html=True)
 
                 else:
                     st.info(f"Your score of {screening_result.get('Score (%)', 0):.2f}% does not meet the 80% threshold for a ScreenerPro Certificate at this time. Keep improving!")
@@ -1866,81 +1876,52 @@ st.set_page_config(page_title="Candidate Screener – AI Resume Match", layout="
 # --- Dark Mode Toggle (simplified for candidate app) ---
 dark_mode = st.sidebar.toggle("🌙 Dark Mode", key="dark_mode_candidate")
 
-# --- Global Fonts & UI Styling (simplified) ---
+# --- Load and Inject CSS ---
+def load_css(file_name):
+    try:
+        with open(file_name) as f:
+            return f.read()
+    except FileNotFoundError:
+        st.error(f"Error: {file_name} not found. Please ensure style.css is in the same directory.")
+        return ""
+
+css_content = load_css(STYLE_CSS_FILE)
 st.markdown(f"""
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-/* Hide Streamlit menu and footer */
-#MainMenu {{visibility: hidden;}}
-footer {{visibility: hidden;}}
-header {{visibility: hidden;}}
-html, body, [class*="css"] {{
-    font-family: 'Inter', sans-serif;
-    background-color: {'#1E1E1E' if dark_mode else '#F0F2F6'};
-    color: {'#E0E0E0' if dark_mode else '#333333'};
-}}
-.stMetric {{
-    background-color: {'#3A3A3A' if dark_mode else '#f0f2f6'};
-    border-radius: 10px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    box-shadow: 0 4px 12px rgba(0,0,0,{'0.2' if dark_mode else '0.05'});
-}}
-.stButton>button {{
-    background-color: #00cec9;
-    color: white;
-    border-radius: 8px;
-    padding: 0.6rem 1.2rem;
-    font-weight: 600;
-    border: none;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}}
-.stButton>button:hover {{
-    background-color: #00b0a8;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-}}
-h1, h2, h3, h4, h5, h6 {{
-    color: {'#00cec9' if dark_mode else '#00cec9'};
-    font-weight: 700;
-}}
-.stTextArea > div > div {{
-    background-color: {'#3A3A3A' if dark_mode else '#f0f2f6'};
-    color: {'#E0E0E0' if dark_mode else '#333333'};
-    border-radius: 8px;
-}}
-.stTextArea > label {{
-    color: {'#E0E0E0' if dark_mode else '#333333'};
-}}
-.stTextInput > div > div > input {{
-    background-color: {'#3A3A3A' if dark_mode else '#f0f2f6'};
-    color: {'#E0E0E0' if dark_mode else '#333333'};
-    border-radius: 8px;
-}}
-.stTextInput > label {{
-    color: {'#E0E0E0' if dark_mode else '#333333'};
-}}
-.stSelectbox > div > div > div > div {{
-    background-color: {'#3A3A3A' if dark_mode else '#f0f2f6'};
-    color: {'#E0E0E0' if dark_mode else '#333333'};
-    border-radius: 8px;
-}}
-.stSelectbox > label {{
-    color: {'#E0E0E0' if dark_mode else '#333333'};
-}}
-.stExpander {{
-    background-color: {'#3A3A3A' if dark_mode else '#f0f2f6'};
-    border-radius: 10px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    box-shadow: 0 4px 12px rgba(0,0,0,{'0.2' if dark_mode else '0.05'});
-}}
-.stExpander > div > div > p {{
-    color: {'#E0E0E0' if dark_mode else '#333333'};
+/* Apply dark/light mode class to body */
+body {{
+    {f"background-color: var(--dark-bg); color: var(--dark-text);" if dark_mode else f"background-color: var(--light-bg); color: var(--light-text);"}
 }}
 </style>
+<style>{css_content}</style>
+<script>
+    // JavaScript to apply dark/light mode class to body based on Streamlit toggle
+    const darkModeToggle = window.parent.document.querySelector('[data-testid="stSidebar"] [data-testid="stCheckbox"] input');
+    const body = window.parent.document.body;
+
+    function applyBodyClass() {{
+        if (darkModeToggle && body) {{
+            if (darkModeToggle.checked) {{
+                body.classList.add('dark-mode');
+                body.classList.remove('light-mode');
+            }} else {{
+                body.classList.add('light-mode');
+                body.classList.remove('dark-mode');
+            }}
+        }}
+    }}
+
+    // Initial application
+    applyBodyClass();
+
+    // Listen for changes
+    if (darkModeToggle) {{
+        darkModeToggle.addEventListener('change', applyBodyClass);
+    }}
+</script>
 """, unsafe_allow_html=True)
+
 
 st.sidebar.title("Candidate Screener")
 
@@ -1962,10 +1943,10 @@ if authenticated:
     if candidate_tab == "🏠 Home (Screener)":
         candidate_screener_page()
     elif candidate_tab == "⭐ Top Candidates":
-        st.markdown("<h2 style='text-align: center; color: #00cec9;'>⭐ Top Candidates This Week</h2>", unsafe_allow_html=True)
+        st.markdown("<h2 class='centered-header'>⭐ Top Candidates This Week</h2>", unsafe_allow_html=True)
         
         # Add a logo at the top of the "Top Candidates" page
-        st.image("https://placehold.co/150x50/00cec9/ffffff?text=ScreenerPro+Logo", caption="ScreenerPro", width=150)
+        st.image("https://placehold.co/150x50/00cec9/ffffff?text=ScreenerPro+Logo", caption="ScreenerPro", width=150, use_column_width=False, output_format="PNG", clamp=True, channels="RGB", format="PNG", class_name="screenerpro-logo")
         
         st.info("See who's acing their resume matches!")
         top_candidates_data = load_top_candidates_leaderboard_local() # Changed to load_top_candidates_leaderboard_local
@@ -1977,6 +1958,26 @@ if authenticated:
             top_candidates_df = top_candidates_df.sort_values(by='Score (%)', ascending=False).head(10) # Re-sort to be safe
 
             st.dataframe(top_candidates_df[['Candidate Name', 'Score (%)', 'Timestamp']].rename(columns={'Score (%)': 'Score'}), use_container_width=True)
+            
+            # Add a graph for score distribution
+            st.markdown("---")
+            st.subheader("Score Distribution Among Top Candidates")
+            if not top_candidates_df.empty:
+                fig = px.histogram(top_candidates_df, x="Score (%)", nbins=10,
+                                   title="Distribution of Top Candidate Scores",
+                                   labels={"Score (%)": "Candidate Score (%)", "count": "Number of Candidates"},
+                                   color_discrete_sequence=[px.colors.qualitative.Pastel[0]]) # Use a nice color
+                # Adjust plot background and font color for dark mode
+                fig.update_layout(xaxis_title="Score (%)", yaxis_title="Number of Candidates",
+                                  plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                                  font_color=("#E0E0E0" if dark_mode else "#333333"),
+                                  xaxis=dict(gridcolor='rgba(128,128,128,0.2)'), # Lighter grid lines
+                                  yaxis=dict(gridcolor='rgba(128,128,128,0.2)')) # Lighter grid lines
+                st.plotly_chart(fig, use_container_width=True)
+            else:
+                st.info("Not enough data to display score distribution yet.")
+
+
             st.markdown("---")
             st.markdown("### Share Your Success!")
             st.write("Did you make it to the top? Share your achievement!")
@@ -1986,14 +1987,14 @@ if authenticated:
                 f"I just checked my resume match on ScreenerPro and it's awesome! Check out the top candidates here: {APP_BASE_URL} #ScreenerPro #JobSearch #ResumeTips"
             )
             x_share_url = f"https://twitter.com/intent/tweet?text={x_share_text}"
-            st.markdown(f'<a href="{x_share_url}" target="_blank" style="display: inline-block; padding: 10px 20px; background-color: #1DA1F2; color: white; border-radius: 8px; text-decoration: none; font-weight: 600; margin-right: 10px;">Share on X/Twitter</a>', unsafe_allow_html=True)
+            st.markdown(f'<a href="{x_share_url}" target="_blank" class="link-button twitter">Share on X/Twitter</a>', unsafe_allow_html=True)
             
             # LinkedIn share (already defined in certificate, but can be generic here)
             linkedin_share_text_generic = urllib.parse.quote(
                 f"Check out the top candidates on ScreenerPro's AI Resume Match platform! Find your fit: {APP_BASE_URL} #ScreenerPro #ResumeMatch #JobSearch"
             )
             linkedin_share_url_generic = f"https://www.linkedin.com/shareArticle?mini=true&url={urllib.parse.quote(APP_BASE_URL)}&title={urllib.parse.quote('ScreenerPro Top Candidates')}&summary={linkedin_share_text_generic}"
-            st.markdown(f'<a href="{linkedin_share_url_generic}" target="_blank" style="display: inline-block; padding: 10px 20px; background-color: #0A66C2; color: white; border-radius: 8px; text-decoration: none; font-weight: 600;">Share on LinkedIn</a>', unsafe_allow_html=True)
+            st.markdown(f'<a href="{linkedin_share_url_generic}" target="_blank" class="link-button linkedin">Share on LinkedIn</a>', unsafe_allow_html=True)
 
         else:
             st.info("No top candidates to display yet. Be the first to get a high score!")
@@ -2001,11 +2002,11 @@ if authenticated:
         st.markdown("---")
         st.subheader("For Recruiters and HR Professionals")
         st.markdown("Are you an HR professional looking for advanced candidate screening tools?")
-        st.markdown(f'<a href="{HR_APP_URL}" target="_blank" style="display: inline-block; padding: 10px 20px; background-color: #28a745; color: white; border-radius: 8px; text-decoration: none; font-weight: 600;">Go to ScreenerPro for HR</a>', unsafe_allow_html=True)
+        st.markdown(f'<a href="{HR_APP_URL}" target="_blank" class="link-button hr-app">Go to ScreenerPro for HR</a>', unsafe_allow_html=True)
 
 
     elif candidate_tab == "🤝 Refer a Friend":
-        st.markdown("<h2 style='text-align: center; color: #00cec9;'>🤝 Refer a Friend</h2>", unsafe_allow_html=True)
+        st.markdown("<h2 class='centered-header'>🤝 Refer a Friend</h2>", unsafe_allow_html=True)
         st.info("Help your friends find their perfect job match and get rewarded!")
         st.markdown("""
         Invite 3 friends to sign up and use ScreenerPro, and you'll unlock a **Premium Scan** feature!
