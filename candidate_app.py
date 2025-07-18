@@ -253,7 +253,7 @@ MASTER_SKILLS = set([skill for category_list in SKILL_CATEGORIES.values() for sk
 
 # IMPORTANT: REPLACE THESE WITH YOUR ACTUAL DEPLOYMENT URLs
 APP_BASE_URL = "https://your-screener-app.streamlit.app" # Placeholder
-CERTIFICATE_HOSTING_URL = "https://your-certificate-hosting-url.com" # Placeholder
+CERTIFICATE_HOSTING_URL = "https://your-certificate-hosting-url.com/certificates" # Placeholder for certificate hosting
 
 
 # Load ML models once using st.cache_resource
@@ -1415,6 +1415,38 @@ def generate_certificate_pdf(html_content):
         st.error(f"❌ Failed to generate PDF certificate: {e}")
         return None
 
+# Modified send_certificate_email for candidate_app.py (simulation)
+def send_certificate_email(recipient_email, candidate_name, score, certificate_id):
+    if not recipient_email or recipient_email == "Not Found":
+        st.error(f"❌ Cannot send certificate: Email address not found for {candidate_name}.")
+        return False
+
+    certificate_link = f"{CERTIFICATE_HOSTING_URL}/{certificate_id}.html" # Assuming ID maps to a hosted HTML
+    
+    email_subject = f"🎉 Congratulations! Your ScreenerPro Certificate is Here!"
+    email_body_html = f"""
+    <html>
+        <body>
+            <p>Hi {candidate_name},</p>
+            <p>Congratulations on successfully completing the ScreenerPro resume screening process with an impressive score of <strong>{score:.1f}%</strong>!</p>
+            <p>We're thrilled to present you with your official certification. This certificate recognizes your skills and employability, helping you stand out in your job search.</p>
+            <p>You can view and share your certificate directly via this link:</p>
+            <p><a href="{certificate_link}" style="display: inline-block; padding: 10px 20px; background-color: #00cec9; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">View Your Certificate</a></p>
+            <p>Feel free to add this to your resume, LinkedIn profile, or share it with potential employers!</p>
+            <p>If you have any questions, please contact us.</p>
+            <p>🚀 Keep striving. Keep growing.</p>
+            <p>– Team ScreenerPro</p>
+        </body>
+    </html>
+    """
+    
+    st.success(f"✅ Certificate email (simulated) sent to {recipient_email}!")
+    st.markdown(f"**Simulated Email Subject:** {email_subject}")
+    st.markdown("**Simulated Email Body (HTML):**")
+    st.components.v1.html(email_body_html, height=200, scrolling=True)
+    st.info(f"The certificate link would be: {certificate_link}")
+    return True
+
 # --- User Authentication and Data Management ---
 
 def load_candidate_users_local():
@@ -1692,7 +1724,7 @@ def candidate_screener_page():
 
                 st.success("Analysis complete!")
 
-                # --- Certificate Generation and Download ---
+                # --- Certificate Generation and Download/Email ---
                 if screening_result.get('Score (%)', 0) >= 80:
                     st.markdown("---")
                     st.subheader("🏆 Congratulations! You've earned a Certificate!")
@@ -1704,7 +1736,15 @@ def candidate_screener_page():
                     # Generate PDF content
                     certificate_pdf_content = generate_certificate_pdf(certificate_html_content)
 
-                    col_cert_dl, col_cert_li = st.columns(2)
+                    col_cert_email, col_cert_dl = st.columns(2)
+                    with col_cert_email:
+                        if st.button("📧 Send Certificate to Email", key="send_cert_email_button"):
+                            send_certificate_email(
+                                recipient_email=screening_result['Email'],
+                                candidate_name=screening_result['Candidate Name'],
+                                score=screening_result['Score (%)'],
+                                certificate_id=screening_result['Certificate ID']
+                            )
                     with col_cert_dl:
                         if certificate_pdf_content:
                             st.download_button(
@@ -1716,12 +1756,14 @@ def candidate_screener_page():
                             )
                         else:
                             st.warning("PDF generation failed, cannot provide download.")
-                    with col_cert_li:
-                        linkedin_share_text = urllib.parse.quote(
-                            f"I just scored {screening_result.get('Score (%)', 0):.2f}% on the ScreenerPro AI Resume Match! 🎉 Check out my certificate and try it yourself: {APP_BASE_URL} #ScreenerPro #ResumeMatch #JobSearch"
-                        )
-                        linkedin_share_url = f"https://www.linkedin.com/shareArticle?mini=true&url={urllib.parse.quote(APP_BASE_URL)}&title={urllib.parse.quote('ScreenerPro AI Match Certificate')}&summary={linkedin_share_text}"
-                        st.markdown(f'<a href="{linkedin_share_url}" target="_blank" style="display: inline-block; padding: 10px 20px; background-color: #0A66C2; color: white; border-radius: 8px; text-decoration: none; font-weight: 600;">Share on LinkedIn</a>', unsafe_allow_html=True)
+                    
+                    st.markdown("---")
+                    st.markdown("### Share Your Success!")
+                    linkedin_share_text = urllib.parse.quote(
+                        f"I just scored {screening_result.get('Score (%)', 0):.2f}% on the ScreenerPro AI Resume Match! 🎉 Check out my certificate and try it yourself: {APP_BASE_URL} #ScreenerPro #ResumeMatch #JobSearch"
+                    )
+                    linkedin_share_url = f"https://www.linkedin.com/shareArticle?mini=true&url={urllib.parse.quote(APP_BASE_URL)}&title={urllib.parse.quote('ScreenerPro AI Match Certificate')}&summary={linkedin_share_text}"
+                    st.markdown(f'<a href="{linkedin_share_url}" target="_blank" style="display: inline-block; padding: 10px 20px; background-color: #0A66C2; color: white; border-radius: 8px; text-decoration: none; font-weight: 600;">Share on LinkedIn</a>', unsafe_allow_html=True)
 
                 else:
                     st.info(f"Your score of {screening_result.get('Score (%)', 0):.2f}% does not meet the 80% threshold for a ScreenerPro Certificate at this time. Keep improving!")
@@ -1758,63 +1800,6 @@ def candidate_screener_page():
                 - **Continuous learning:** The job market evolves; keep your skills updated!
                 """)
     
-    # --- Candidate Dashboard (always visible after login) ---
-    st.markdown("---")
-    st.markdown("## 📊 Your Candidate Dashboard")
-    
-    # Load history
-    if st.session_state.get('candidate_username'):
-        # Filter history for the current user
-        all_history = load_candidate_screening_history_local()
-        user_history = [item for item in all_history if item.get('user_email') == st.session_state.candidate_username]
-        
-        if user_history:
-            history_df = pd.DataFrame(user_history)
-            # Ensure numeric types
-            for col in ['Score (%)', 'Years Experience', 'CGPA (4.0 Scale)', 'Semantic Similarity']:
-                if col in history_df.columns:
-                    history_df[col] = pd.to_numeric(history_df[col], errors='coerce')
-            # Convert timestamp back to datetime and sort
-            if 'timestamp' in history_df.columns:
-                history_df['timestamp'] = pd.to_datetime(history_df['timestamp'], errors='coerce')
-            history_df = history_df.sort_values(by='timestamp', ascending=False)
-
-            # Use tabs for dashboard sections
-            history_tab, score_dist_tab, skill_summary_tab = st.tabs(["Screening History", "Score Distribution", "Skill Summary"])
-
-            with history_tab:
-                st.subheader("Your Screening History")
-                st.dataframe(history_df[['timestamp', 'JD Used', 'Score (%)', 'Years Experience', 'Matched Keywords']].rename(columns={'Score (%)': 'Score', 'Years Experience': 'Experience'}), use_container_width=True)
-
-            with score_dist_tab:
-                st.markdown("#### Your Score Distribution")
-                fig_hist = px.histogram(history_df, x='Score (%)', nbins=10, title='Distribution of Your Scores',
-                                        labels={'Score (%)': 'Match Score (%)'}, color_discrete_sequence=['#00cec9'])
-                st.plotly_chart(fig_hist, use_container_width=True)
-                
-                # Latest Score Metric
-                latest_score = history_df.iloc[0]['Score (%)']
-                st.metric("Latest Score", f"{latest_score:.2f}%")
-
-            with skill_summary_tab:
-                st.subheader("Key Skills from Latest Scan")
-                latest_matched_keywords = history_df.iloc[0].get('Matched Keywords', 'None')
-                if latest_matched_keywords and isinstance(latest_matched_keywords, str):
-                    st.markdown(f"**Matched:** {latest_matched_keywords}")
-                else:
-                    st.info("No matched keywords from your latest scan.")
-
-                latest_missing_skills = history_df.iloc[0].get('Missing Skills', 'None')
-                if latest_missing_skills and isinstance(latest_missing_skills, str):
-                    st.markdown(f"**Missing:** {latest_missing_skills}")
-                else:
-                    st.info("No missing skills from your latest scan.")
-
-        else:
-            st.info("No screening history found. Upload your resume to see your dashboard!")
-    else:
-        st.info("Log in to view your screening history dashboard.")
-
 # --- Main Candidate App Logic ---
 st.set_page_config(page_title="Candidate Screener – AI Resume Match", layout="centered", page_icon="📄")
 
@@ -1904,8 +1889,8 @@ authenticated = candidate_login_section()
 if authenticated:
     st.sidebar.markdown(f"Hello, **{st.session_state.candidate_username}**!")
     
-    # Navigation for candidate app
-    candidate_nav_options = ["🏠 Home (Screener)", "📊 My Dashboard", "⭐ Top Candidates", "🤝 Refer a Friend"]
+    # Navigation for candidate app (removed "My Dashboard")
+    candidate_nav_options = ["🏠 Home (Screener)", "⭐ Top Candidates", "🤝 Refer a Friend"]
     candidate_tab = st.sidebar.radio("Navigate", candidate_nav_options)
 
     if st.sidebar.button("🚪 Logout", key="candidate_logout_button"):
@@ -1916,60 +1901,6 @@ if authenticated:
     
     if candidate_tab == "🏠 Home (Screener)":
         candidate_screener_page()
-    elif candidate_tab == "📊 My Dashboard":
-        st.markdown("<h2 style='text-align: center; color: #00cec9;'>📊 Your Personal Dashboard</h2>", unsafe_allow_html=True)
-        if st.session_state.get('candidate_username'):
-            # Filter history for the current user
-            all_history = load_candidate_screening_history_local()
-            user_history = [item for item in all_history if item.get('user_email') == st.session_state.candidate_username]
-            
-            if user_history:
-                history_df = pd.DataFrame(user_history)
-                # Ensure numeric types
-                for col in ['Score (%)', 'Years Experience', 'CGPA (4.0 Scale)', 'Semantic Similarity']:
-                    if col in history_df.columns:
-                        history_df[col] = pd.to_numeric(history_df[col], errors='coerce')
-                # Convert timestamp back to datetime and sort
-                if 'timestamp' in history_df.columns:
-                    history_df['timestamp'] = pd.to_datetime(history_df['timestamp'], errors='coerce')
-                history_df = history_df.sort_values(by='timestamp', ascending=False)
-
-                # Use tabs for dashboard sections
-                history_tab, score_dist_tab, skill_summary_tab = st.tabs(["Screening History", "Score Distribution", "Skill Summary"])
-
-                with history_tab:
-                    st.subheader("Your Screening History")
-                    st.dataframe(history_df[['timestamp', 'JD Used', 'Score (%)', 'Years Experience', 'Matched Keywords']].rename(columns={'Score (%)': 'Score', 'Years Experience': 'Experience'}), use_container_width=True)
-
-                with score_dist_tab:
-                    st.markdown("#### Your Score Distribution")
-                    fig_hist = px.histogram(history_df, x='Score (%)', nbins=10, title='Distribution of Your Scores',
-                                            labels={'Score (%)': 'Match Score (%)'}, color_discrete_sequence=['#00cec9'])
-                    st.plotly_chart(fig_hist, use_container_width=True)
-                    
-                    # Latest Score Metric
-                    latest_score = history_df.iloc[0]['Score (%)']
-                    st.metric("Latest Score", f"{latest_score:.2f}%")
-
-                with skill_summary_tab:
-                    st.subheader("Key Skills from Latest Scan")
-                    latest_matched_keywords = history_df.iloc[0].get('Matched Keywords', 'None')
-                    if latest_matched_keywords and isinstance(latest_matched_keywords, str):
-                        st.markdown(f"**Matched:** {latest_matched_keywords}")
-                    else:
-                        st.info("No matched keywords from your latest scan.")
-
-                    latest_missing_skills = history_df.iloc[0].get('Missing Skills', 'None')
-                    if latest_missing_skills and isinstance(latest_missing_skills, str):
-                        st.markdown(f"**Missing:** {latest_missing_skills}")
-                    else:
-                        st.info("No missing skills from your latest scan.")
-
-            else:
-                st.info("No screening history found. Upload your resume to see your dashboard!")
-        else:
-            st.warning("Please log in to view your dashboard.")
-
     elif candidate_tab == "⭐ Top Candidates":
         st.markdown("<h2 style='text-align: center; color: #00cec9;'>⭐ Top Candidates This Week</h2>", unsafe_allow_html=True)
         st.info("See who's acing their resume matches!")
