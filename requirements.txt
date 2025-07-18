@@ -4,3 +4,26 @@ bcrypt
 PyPDF2
 python-docx
 plotly
+streamlit
+pdfplumber
+pandas
+matplotlib
+wordcloud
+seaborn
+spacy
+scikit-learn
+sentence-transformers
+torch
+NLTK
+firebase-admin
+simplejson
+plotly
+statsmodels
+bcrypt
+pytesseract
+Pillow
+numpy
+opencv-python-headless # Optional, but highly recommended for image preprocessing
+joblib
+pdf2image
+WeasyPrint
