@@ -1,0 +1,10 @@
+pango-1.0-0
+libcairo2
+libgdk-pixbuf2.0-0
+libffi-dev
+libxml2-dev
+libxslt1-dev
+libjpeg-dev
+zlib1g-dev
+tesseract-ocr
+tesseract-ocr-eng
