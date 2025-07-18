@@ -14,16 +14,16 @@ import joblib # For loading ML models
 from sklearn.metrics.pairwise import cosine_similarity # For semantic similarity
 from sentence_transformers import SentenceTransformer # For embeddings
 import nltk # For stopwords
-from PIL import Image # For image processing (OCR)
-import pytesseract # For OCR
-
-from pdf2image import convert_from_bytes # For PDF to image conversion
+import pdfplumber # For PDF text extraction
 from weasyprint import HTML # For PDF certificate generation
 import traceback # For detailed error logging
 import plotly.express as px # For dashboard histogram
 
 # CRITICAL: Disable Hugging Face tokenizers parallelism to avoid deadlocks
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
+# --- OCR Specific Imports (REMOVED) ---
+# Image, pytesseract, cv2, pdf2image imports are removed.
 
 # Global NLTK download check (should run once)
 try:
@@ -40,6 +40,7 @@ JD_FOLDER = "data" # Folder where JDs are stored
 # Ensure the JD folder exists and create a dummy JD if empty
 if not os.path.exists(JD_FOLDER):
     os.makedirs(JD_FOLDER)
+    # Create a dummy JD file if the folder was just created and is empty
     dummy_jd_path = os.path.join(JD_FOLDER, "sample_software_engineer_jd.txt")
     if not os.path.exists(dummy_jd_path):
         with open(dummy_jd_path, "w") as f:
@@ -82,7 +83,7 @@ if not os.path.exists(JD_FOLDER):
         st.info(f"Created a sample JD: {dummy_jd_path} in the '{JD_FOLDER}' folder.")
 
 
-# --- Constants from screener.py ---
+# --- Constants from screener.py (adapted for candidate_app.py) ---
 MASTER_CITIES = set([
     "Bengaluru", "Mumbai", "Delhi", "Chennai", "Hyderabad", "Kolkata", "Pune", "Ahmedabad", "Jaipur", "Lucknow",
     "Chandigarh", "Kochi", "Coimbatore", "Nagpur", "Bhopal", "Indore", "Gurgaon", "Noida", "Surat", "Visakhapatnam",
@@ -257,16 +258,6 @@ APP_BASE_URL = "https://your-screener-app.streamlit.app" # Placeholder
 CERTIFICATE_HOSTING_URL = "https://your-certificate-hosting-url.com" # Placeholder
 
 
-@st.cache_resource
-def get_tesseract_cmd():
-    # In a deployed Streamlit Cloud app, tesseract might be in PATH automatically
-    # or needs to be specified via apt-get in packages.txt
-    tesseract_path = os.environ.get("TESSERACT_CMD", shutil.which("tesseract")) # Use shutil.which for robustness
-    if tesseract_path:
-        pytesseract.pytesseract.tesseract_cmd = tesseract_path
-        return tesseract_path
-    return None
-
 # Load ML models once using st.cache_resource
 @st.cache_resource
 def load_ml_model():
@@ -295,211 +286,7 @@ def load_ml_model():
 global_sentence_model, global_ml_model = load_ml_model()
 
 
-# --- Authentication Functions (Local JSON) ---
-def load_candidate_users():
-    """Loads candidate user data from the JSON file."""
-    if not os.path.exists(USER_DB_FILE_CANDIDATE):
-        with open(USER_DB_FILE_CANDIDATE, "w") as f:
-            json.dump({}, f)
-    with open(USER_DB_FILE_CANDIDATE, "r") as f:
-        users = json.load(f)
-        # Ensure each user has a 'status' key for backward compatibility
-        for username, data in users.items():
-            if isinstance(data, str): # Old format: "username": "hashed_password"
-                users[username] = {"password": data, "status": "active"}
-            if "status" not in users[username]:
-                users[username]["status"] = "active"
-        return users
-
-def save_candidate_users(users):
-    """Saves candidate user data to the JSON file."""
-    with open(USER_DB_FILE_CANDIDATE, "w") as f:
-        json.dump(users, f, indent=4)
-
-def hash_password(password):
-    """Hashes a password using bcrypt."""
-    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-
-def check_password(password, hashed_password):
-    """Checks a password against its bcrypt hash."""
-    return bcrypt.checkpw(password.encode('utf-8'), hashed_password.encode('utf-8'))
-
-def is_valid_email(email):
-    """Basic validation for email format."""
-    return re.match(r"[^@]+@[^@]+\.\w+", email)
-
-def candidate_register_section():
-    """Candidate self-registration form using local JSON."""
-    st.subheader("📝 Create Your Candidate Account")
-    with st.form("candidate_registration_form", clear_on_submit=True):
-        new_email = st.text_input("Your Email Address (Username)", key="new_email_cand_reg")
-        new_password = st.text_input("Choose Password", type="password", key="new_password_cand_reg")
-        confirm_password = st.text_input("Confirm Password", type="password", key="confirm_password_cand_reg")
-        register_button = st.form_submit_button("Register Account")
-
-        if register_button:
-            if not new_email or not new_password or not confirm_password:
-                st.error("Please fill in all fields.")
-            elif not is_valid_email(new_email):
-                st.error("Please enter a valid email address for the username.")
-            elif new_password != confirm_password:
-                st.error("Passwords do not match.")
-            else:
-                users = load_candidate_users()
-                if new_email in users:
-                    st.error("Email already registered. Please choose a different one or log in.")
-                else:
-                    users[new_email] = {
-                        "password": hash_password(new_password),
-                        "status": "active"
-                    }
-                    save_candidate_users(users)
-                    st.success("✅ Registration successful! You can now switch to the 'Login' option.")
-                    st.session_state.active_candidate_tab_selection = "Login" # To switch tab after successful registration
-
-def candidate_login_section():
-    """Handles candidate login and registration tab switching using local JSON."""
-    if "candidate_authenticated" not in st.session_state:
-        st.session_state.candidate_authenticated = False
-    if "candidate_username" not in st.session_state:
-        st.session_state.candidate_username = None
-
-    if st.session_state.get("candidate_authenticated", False):
-        return True # Already logged in
-
-    if "active_candidate_tab_selection" not in st.session_state:
-        st.session_state.active_candidate_tab_selection = "Login"
-
-    tabs = st.tabs(["Login", "Register"])
-
-    with tabs[0]: # Login tab
-        st.subheader("🔐 Candidate Login")
-        with st.form("candidate_login_form", clear_on_submit=False):
-            email = st.text_input("Your Email Address", key="email_cand_login")
-            password = st.text_input("Password", type="password", key="password_cand_login")
-            submitted = st.form_submit_button("Login")
-
-            if submitted:
-                if not email or not password:
-                    st.error("Please enter both email and password.")
-                else:
-                    users = load_candidate_users()
-                    if email not in users:
-                        st.error("❌ Invalid email or password. Please register if you don't have an account.")
-                    else:
-                        user_data = users[email]
-                        if user_data["status"] == "disabled":
-                            st.error("❌ Your account has been disabled. Please contact support.")
-                        elif check_password(password, user_data["password"]):
-                            st.session_state.candidate_authenticated = True
-                            st.session_state.candidate_username = email
-                            st.success("✅ Login successful! Redirecting to Screener...")
-                            st.rerun()
-                            return True
-                        else:
-                            st.error("❌ Invalid email or password.")
-                            return False
-    with tabs[1]: # Register tab
-        candidate_register_section()
-
-    return False # Not authenticated yet
-
-# --- Local JSON Data Persistence for Candidate History ---
-def load_candidate_screening_history_local():
-    """Loads all screening results for a candidate from local JSON."""
-    if not os.path.exists(CANDIDATE_HISTORY_FILE):
-        return []
-    with open(CANDIDATE_HISTORY_FILE, "r") as f:
-        return json.load(f)
-
-def save_candidate_screening_history_local(history):
-    """Saves candidate screening history to local JSON."""
-    with open(CANDIDATE_HISTORY_FILE, "w") as f:
-        json.dump(history, f, indent=4)
-
-def save_candidate_screening_result_local(username, result_data):
-    """Saves a single candidate screening result to local JSON."""
-    history = load_candidate_screening_history_local()
-    
-    # Add username and timestamp
-    result_data['user_email'] = username
-    result_data['timestamp'] = datetime.now().isoformat()
-
-    # Ensure lists are converted to comma-separated strings for storage if needed
-    for key in ['Matched Keywords', 'Missing Skills', 'Languages']:
-        if isinstance(result_data.get(key), list):
-            result_data[key] = ", ".join(result_data[key])
-    
-    history.append(result_data)
-    save_candidate_screening_history_local(history)
-    st.toast("✅ Screening result saved to history!")
-
-def load_top_candidates_local():
-    """Loads top candidates from local JSON for leaderboard."""
-    if not os.path.exists(CANDIDATE_LEADERBOARD_FILE):
-        return []
-    with open(CANDIDATE_LEADERBOARD_FILE, "r") as f:
-        return json.load(f)
-
-def save_top_candidates_local(leaderboard_data):
-    """Saves top candidates leaderboard to local JSON."""
-    with open(CANDIDATE_LEADERBOARD_FILE, "w") as f:
-        json.dump(leaderboard_data, f, indent=4)
-
-def update_top_candidates_leaderboard_local(candidate_name, score, username):
-    """Updates the local leaderboard with a candidate's best score."""
-    leaderboard = load_top_candidates_local()
-    
-    # Check if this user already exists in the leaderboard
-    found = False
-    for entry in leaderboard:
-        if entry.get("SourceUser") == username:
-            if score > entry.get("Score (%)", 0):
-                entry["Candidate Name"] = candidate_name
-                entry["Score (%)"] = score
-                entry["Timestamp"] = datetime.now().isoformat()
-                st.toast("🎉 Leaderboard updated!")
-            found = True
-            break
-    
-    if not found:
-        leaderboard.append({
-            "Candidate Name": candidate_name,
-            "Score (%)": score,
-            "Timestamp": datetime.now().isoformat(),
-            "SourceUser": username
-        })
-        st.toast("🎉 Leaderboard updated!")
-    
-    # Sort and keep only top 10
-    leaderboard.sort(key=lambda x: x.get("Score (%)", 0), reverse=True)
-    save_top_candidates_local(leaderboard[:10])
-
-# --- JD Loading Function ---
-def load_jds_from_folder(folder_path):
-    """Loads all .txt files from a specified folder."""
-    jds = {}
-    if not os.path.exists(folder_path):
-        return jds
-    
-    for filename in os.listdir(folder_path):
-        if filename.endswith(".txt"):
-            file_path = os.path.join(folder_path, filename)
-            try:
-                with open(file_path, "r", encoding="utf-8") as f:
-                    jds[filename] = f.read()
-            except Exception as e:
-                st.warning(f"Could not read JD file {filename}: {e}")
-    return jds
-
-# --- Core Resume Processing Functions (Copied/Adapted from screener.py) ---
-
-def preprocess_image_for_ocr(image):
-    img_cv = np.array(image)
-    img_cv = cv2.cvtColor(img_cv, cv2.COLOR_RGB2GRAY)
-    img_processed = cv2.adaptiveThreshold(img_cv, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-                                          cv2.THRESH_BINARY, 11, 2)
-    return Image.fromarray(img_processed)
+# --- Removed preprocess_image_for_ocr as it's no longer needed ---
 
 def clean_text(text):
     text = re.sub(r'\n', ' ', text)
@@ -555,52 +342,30 @@ def extract_relevant_keywords(text, filter_set):
 
     return extracted_keywords, dict(categorized_keywords)
 
-
+# Modified extract_text_from_file to remove OCR
 def extract_text_from_file(file_bytes, file_name, file_type):
     full_text = ""
-    # Tesseract configuration for speed and common resume layout
-    tesseract_config = "--oem 1 --psm 3" 
 
     if "pdf" in file_type:
         try:
-            import pdfplumber # Moved import here as it's not always needed
-            with pdfplumber.open(BytesIO(file_bytes)) as pdf:
-                pdf_text = ''.join(page.extract_text() or '' for page in pdf.pages)
-            
-            if len(pdf_text.strip()) < 50: # Heuristic for potentially scanned PDF
-                images = convert_from_bytes(file_bytes)
-                for img in images:
-                    processed_img = preprocess_image_for_ocr(img)
-                    full_text += pytesseract.image_to_string(processed_img, lang='eng', config=tesseract_config) + "\n"
-            else:
-                full_text = pdf_text
-
+            with pdfplumber.open(io.BytesIO(file_bytes)) as pdf:
+                full_text = ''.join(page.extract_text() or '' for page in pdf.pages)
         except Exception as e:
-            # Fallback to OCR directly if pdfplumber fails or for any other PDF error
-            try:
-                images = convert_from_bytes(file_bytes)
-                for img in images:
-                    processed_img = preprocess_image_for_ocr(img)
-                    full_text += pytesseract.image_to_string(processed_img, lang='eng', config=tesseract_config) + "\n"
-            except Exception as e_ocr:
-                print(f"ERROR: Failed to extract text from PDF via OCR for {file_name}: {str(e_ocr)}")
-                return f"[ERROR] Failed to extract text from PDF via OCR: {str(e_ocr)}"
-
-    elif "image" in file_type:
+            st.error(f"Error reading PDF file {file_name}: {e}. Please ensure it's a valid, text-based PDF.")
+            return f"[ERROR] Failed to extract text from PDF: {e}"
+    elif "txt" in file_type:
         try:
-            img = Image.open(BytesIO(file_bytes)).convert("RGB")
-            processed_img = preprocess_image_for_ocr(img)
-            full_text = pytesseract.image_to_string(processed_img, lang='eng', config=tesseract_config)
+            full_text = file_bytes.decode("utf-8")
         except Exception as e:
-            print(f"ERROR: Failed to extract text from image for {file_name}: {str(e)}")
-            return f"[ERROR] Failed to extract text from image: {str(e)}"
+            st.error(f"Error reading TXT file {file_name}: {e}.")
+            return f"[ERROR] Failed to extract text from TXT: {e}"
     else:
-        print(f"ERROR: Unsupported file type for {file_name}: {file_type}")
-        return f"[ERROR] Unsupported file type: {file_type}. Please upload a PDF or an image (JPG, PNG)."
+        st.error(f"Unsupported file type for {file_name}: {file_type}. Only PDF and TXT are supported without OCR.")
+        return f"[ERROR] Unsupported file type: {file_type}. Please upload a PDF or TXT file."
 
     if not full_text.strip():
-        print(f"ERROR: No readable text extracted from {file_name}. It might be a very low-quality scan or an empty document.")
-        return "[ERROR] No readable text extracted from the file. It might be a very low-quality scan or an empty document."
+        st.warning(f"No readable text extracted from {file_name}. It might be an empty document or a scanned PDF without text layer.")
+        return "[ERROR] No readable text extracted from the file."
     
     return full_text
 
@@ -1332,7 +1097,7 @@ def process_single_resume_for_candidate_app(file_name, file_bytes, file_type, jd
         
         education_details_formatted = education_details_text
         work_history_formatted = format_work_history(work_history_raw)
-        project_details_formatted = format_project_details(project_details_raw) # Corrected to use format_project_details
+        project_details_formatted = format_project_details(project_details_raw)
 
         candidate_name = extract_name(text) or file_name.replace('.pdf', '').replace('.jpg', '').replace('.jpeg', '').replace('.png', '').replace('_', ' ').title()
         cgpa = extract_cgpa(text)
@@ -1785,13 +1550,16 @@ def candidate_screener_page():
 
                     col_cert_dl, col_cert_li = st.columns(2)
                     with col_cert_dl:
-                        st.download_button(
-                            label="⬇️ Download Certificate (PDF)",
-                            data=certificate_pdf_content,
-                            file_name=f"ScreenerPro_Certificate_{screening_result['Candidate Name'].replace(' ', '_')}.pdf",
-                            mime="application/pdf",
-                            key="download_cert_pdf_button"
-                        )
+                        if certificate_pdf_content:
+                            st.download_button(
+                                label="⬇️ Download Certificate (PDF)",
+                                data=certificate_pdf_content,
+                                file_name=f"ScreenerPro_Certificate_{screening_result['Candidate Name'].replace(' ', '_')}.pdf",
+                                mime="application/pdf",
+                                key="download_cert_pdf_button"
+                            )
+                        else:
+                            st.warning("PDF generation failed, cannot provide download.")
                     with col_cert_li:
                         linkedin_share_text = urllib.parse.quote(
                             f"I just scored {screening_result.get('Score (%)', 0):.2f}% on the ScreenerPro AI Resume Match! 🎉 Check out my certificate and try it yourself: {APP_BASE_URL} #ScreenerPro #ResumeMatch #JobSearch"
@@ -1951,14 +1719,6 @@ h1, h2, h3, h4, h5, h6 {{
 
 st.sidebar.title("Candidate Screener")
 
-# Initial check for Tesseract (main process only)
-# This is important for OCR functionality
-tesseract_cmd_path = get_tesseract_cmd()
-if not tesseract_cmd_path:
-    st.error("Tesseract OCR engine not found. Please ensure it's installed and in your system's PATH.")
-    st.info("On Streamlit Community Cloud, ensure you have a `packages.txt` file in your repository's root with `tesseract-ocr` and `tesseract-ocr-eng` listed.")
-    # st.stop() # Do not stop the app, allow it to run but with OCR warning.
-
 authenticated = candidate_login_section()
 
 if authenticated:
@@ -2018,8 +1778,9 @@ if authenticated:
                     st.markdown(f"**Missing:** {latest_missing_skills}")
                 else:
                     st.info("No missing skills from your latest scan.")
+
             else:
-                st.info("No screening history found. Use the 'Home (Screener)' tab to analyze your resume!")
+                st.info("No screening history found. Upload your resume to see your dashboard!")
         else:
             st.warning("Please log in to view your dashboard.")
 
