@@ -1,0 +1,6 @@
+streamlit
+pandas
+bcrypt
+PyPDF2
+python-docx
+plotly
