@@ -1002,7 +1002,7 @@ def semantic_score_calculation(jd_embedding, resume_embedding, years_exp, cgpa, 
     semantic_similarity = cosine_similarity(jd_embedding.reshape(1, -1), resume_embedding.reshape(1, -1))[0][0]
     semantic_similarity = float(np.clip(semantic_similarity, 0, 1))
 
-    if _ml_model is None:
+    if _ml_model === None: # Changed from `is None` for robustness in case of type issues
         print("DEBUG: ML model not loaded in semantic_score_calculation. Providing basic score and generic feedback.")
         basic_score = (weighted_keyword_overlap_score * 0.7)
         basic_score += min(years_exp * 5, 30)
@@ -1465,7 +1465,6 @@ If you have any questions, please contact us.
             <p>Hi {candidate_name},</p>
             <p>Congratulations on successfully completing the ScreenerPro resume screening process with an impressive score of <strong>{score:.1f}%</strong>!</p>
             <p>We're thrilled to present you with your official certification. This certificate recognizes your skills and employability, helping you stand out in your job search.</p>
-            <p>You can view and share your certificate directly via this link:</p>
             <p><a href="{certificate_link}" style="display: inline-block; padding: 10px 20px; background-color: #00cec9; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">View Your Certificate</a></p>
             <p>Feel free to add this to your resume, LinkedIn profile, or share it with potential employers!</p>
             <p>If you have any questions, please contact us.</p>
@@ -1601,13 +1600,17 @@ def candidate_login_section():
 
     with login_tab:
         st.markdown("#### Existing User Login") # Use markdown for sub-headers within tabs
-        username = st.text_input("Email", key="login_email_candidate")
-        password = st.text_input("Password", type="password", key="login_password_candidate")
+        username = st.text_input("Email", key="login_email_candidate").strip() # Added .strip()
+        password = st.text_input("Password", type="password", key="login_password_candidate").strip() # Added .strip()
 
         if st.button("Login", key="login_button_candidate"):
             users = load_candidate_users_local()
+            print(f"DEBUG: Attempting login for user: '{username}'")
+            print(f"DEBUG: Loaded users: {users.keys()}")
             if username in users:
                 hashed_password = users[username]['password']
+                print(f"DEBUG: Stored hash for '{username}': {hashed_password}")
+                print(f"DEBUG: Input password (stripped): '{password}'")
                 if bcrypt.checkpw(password.encode('utf-8'), hashed_password.encode('utf-8')):
                     st.session_state.candidate_authenticated = True
                     st.session_state.candidate_username = username
@@ -1615,14 +1618,16 @@ def candidate_login_section():
                     st.rerun()
                 else:
                     st.sidebar.error("Incorrect password.")
+                    print("DEBUG: Password mismatch.")
             else:
                 st.sidebar.error("User not found. Please register or check your email.")
+                print("DEBUG: User not found.")
 
     with register_tab:
         st.markdown("#### New User Registration") # Use markdown for sub-headers within tabs
-        new_username = st.text_input("Email (for registration)", key="register_email_candidate")
-        new_password = st.text_input("Password (for registration)", type="password", key="register_password_candidate")
-        confirm_password = st.text_input("Confirm Password", type="password", key="confirm_password_candidate")
+        new_username = st.text_input("Email (for registration)", key="register_email_candidate").strip() # Added .strip()
+        new_password = st.text_input("Password (for registration)", type="password", key="register_password_candidate").strip() # Added .strip()
+        confirm_password = st.text_input("Confirm Password", type="password", key="confirm_password_candidate").strip() # Added .strip()
 
         if st.button("Register", key="register_button_candidate"):
             if new_username and new_password and confirm_password:
@@ -1633,12 +1638,16 @@ def candidate_login_section():
                         users[new_username] = {'password': hashed_password}
                         save_candidate_users_local(users)
                         st.sidebar.success("Registration successful! You can now log in.")
+                        print(f"DEBUG: Registered new user: '{new_username}' with hash: {hashed_password}")
                     else:
                         st.sidebar.warning("Email already registered. Please log in.")
+                        print(f"DEBUG: Registration failed: '{new_username}' already exists.")
                 else:
                     st.sidebar.error("Passwords do not match.")
+                    print("DEBUG: Registration failed: Passwords do not match.")
             else:
                 st.sidebar.error("Please fill in all registration fields.")
+                print("DEBUG: Registration failed: Missing fields.")
     return st.session_state.candidate_authenticated
 
 # --- Helper function to load JDs ---
@@ -1899,6 +1908,7 @@ def load_css(file_name):
         return ""
 
 css_content = load_css(STYLE_CSS_FILE)
+# Embed CSS directly into the HTML for robust styling
 st.markdown(f"""
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>{css_content}</style>
