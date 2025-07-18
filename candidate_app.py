@@ -19,6 +19,11 @@ from weasyprint import HTML # For PDF certificate generation
 import traceback # For detailed error logging
 import plotly.express as px # For dashboard histogram
 import uuid # Import uuid for certificate IDs
+import smtplib # For sending emails
+from email.mime.multipart import MIMEMultipart # For multipart email (text + html + attachment)
+from email.mime.text import MIMEText # For text parts of email
+from email.mime.base import MIMEBase # For attachments
+from email import encoders # For encoding attachments
 
 # CRITICAL: Disable Hugging Face tokenizers parallelism to avoid deadlocks
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
@@ -1415,16 +1420,42 @@ def generate_certificate_pdf(html_content):
         st.error(f"❌ Failed to generate PDF certificate: {e}")
         return None
 
-# Modified send_certificate_email for candidate_app.py (simulation)
-def send_certificate_email(recipient_email, candidate_name, score, certificate_id):
+# Modified send_certificate_email for candidate_app.py (actual sending)
+def send_certificate_email(recipient_email, candidate_name, score, certificate_id, certificate_pdf_content, gmail_address, gmail_app_password):
     if not recipient_email or recipient_email == "Not Found":
         st.error(f"❌ Cannot send certificate: Email address not found for {candidate_name}.")
+        return False
+    
+    if not gmail_address or not gmail_app_password:
+        st.error("❌ Email sending is not configured. Please ensure your Gmail address and App Password secrets are set in Streamlit.")
+        st.info("Refer to the instructions in the code for setting up Gmail App Passwords.")
         return False
 
     certificate_link = f"{CERTIFICATE_HOSTING_URL}/{certificate_id}.html" # Assuming ID maps to a hosted HTML
     
-    email_subject = f"🎉 Congratulations! Your ScreenerPro Certificate is Here!"
-    email_body_html = f"""
+    msg = MIMEMultipart('mixed')
+    msg['Subject'] = f"🎉 Congratulations! Your ScreenerPro Certificate is Here!"
+    msg['From'] = gmail_address
+    msg['To'] = recipient_email
+
+    plain_text_body = f"""Hi {candidate_name},
+
+Congratulations on successfully completing the ScreenerPro resume screening process with an impressive score of {score:.1f}%!
+
+We're thrilled to present you with your official certification. This certificate recognizes your skills and employability, helping you stand out in your job search.
+
+You can view and share your certificate directly via this link: {certificate_link}
+
+Feel free to add this to your resume, LinkedIn profile, or share it with potential employers!
+
+If you have any questions, please contact us.
+
+🚀 Keep striving. Keep growing.
+
+– Team ScreenerPro
+"""
+
+    html_body = f"""
     <html>
         <body>
             <p>Hi {candidate_name},</p>
@@ -1440,12 +1471,38 @@ def send_certificate_email(recipient_email, candidate_name, score, certificate_i
     </html>
     """
     
-    st.success(f"✅ Certificate email (simulated) sent to {recipient_email}!")
-    st.markdown(f"**Simulated Email Subject:** {email_subject}")
-    st.markdown("**Simulated Email Body (HTML):**")
-    st.components.v1.html(email_body_html, height=200, scrolling=True)
-    st.info(f"The certificate link would be: {certificate_link}")
-    return True
+    msg_alternative = MIMEMultipart('alternative')
+    msg_alternative.attach(MIMEText(plain_text_body, 'plain'))
+    msg_alternative.attach(MIMEText(html_body, 'html'))
+    msg.attach(msg_alternative)
+
+    if certificate_pdf_content:
+        try:
+            attachment = MIMEBase('application', 'pdf')
+            attachment.set_payload(certificate_pdf_content)
+            encoders.encode_base64(attachment)
+            attachment.add_header('Content-Disposition', 'attachment', filename=f'ScreenerPro_Certificate_{candidate_name.replace(" ", "_")}.pdf')
+            msg.attach(attachment)
+            st.info(f"Attached certificate PDF to email for {candidate_name}.")
+        except Exception as e:
+            st.error(f"Failed to attach certificate PDF: {e}")
+    else:
+        st.warning("No PDF content generated to attach to email.")
+
+    try:
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+            smtp.login(gmail_address, gmail_app_password)
+            smtp.send_message(msg)
+        st.success(f"✅ Certificate email sent to {recipient_email}!")
+        return True
+    except smtplib.SMTPAuthenticationError:
+        st.error("❌ Failed to send email: Authentication error. Please check your Gmail address and App Password.")
+        st.info("Ensure you have generated an App Password for your Gmail account and used it instead of your regular password.")
+    except Exception as e:
+        st.error(f"❌ Failed to send email: {e}")
+        traceback.print_exc() # Print full traceback for debugging
+    return False
+
 
 # --- User Authentication and Data Management ---
 
@@ -1743,7 +1800,10 @@ def candidate_screener_page():
                                 recipient_email=screening_result['Email'],
                                 candidate_name=screening_result['Candidate Name'],
                                 score=screening_result['Score (%)'],
-                                certificate_id=screening_result['Certificate ID']
+                                certificate_id=screening_result['Certificate ID'], # Pass certificate_id
+                                certificate_pdf_content=certificate_pdf_content, # Pass PDF content
+                                gmail_address=st.secrets.get("GMAIL_ADDRESS"), # Get from secrets
+                                gmail_app_password=st.secrets.get("GMAIL_APP_PASSWORD") # Get from secrets
                             )
                     with col_cert_dl:
                         if certificate_pdf_content:
