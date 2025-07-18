@@ -1,1112 +1,216 @@
-/* Base Imports & Global Resets */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap'); /* Added 900 weight */
+/* style.css */
 
-/* Hide GitHub fork button, Streamlit menu and footer */
-#MainMenu {
-    visibility: hidden;
-}
-
-footer {
-    visibility: hidden;
-}
-
-header {
-    visibility: hidden; /* Optional: hides the top bar */
-}
-
-/* Global body and HTML styling */
-html,
-body,
-[class*="css"] {
+/* General Body Styling */
+body {
     font-family: 'Inter', sans-serif;
-    /* Background and color will be set dynamically by Streamlit based on dark_mode toggle */
-    transition: background-color 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), color 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother, longer transition */
-    scroll-behavior: smooth;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    overflow-x: hidden; /* Prevent horizontal scroll */
+    margin: 0;
+    padding: 0;
+    background-color: #f0f2f6; /* Light background */
+    color: #333; /* Dark text for light mode */
+    transition: background-color 0.3s, color 0.3s;
 }
 
-/* Custom scrollbar for a cleaner look */
-::-webkit-scrollbar {
-    width: 12px; /* Slightly wider scrollbar */
+/* Dark Mode Specific Styles */
+body.dark-mode {
+    background-color: #1e1e1e; /* Dark background */
+    color: #e0e0e0; /* Light text for dark mode */
 }
 
-::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.15); /* Darker track for better contrast */
-    border-radius: 10px;
+body.dark-mode .stApp {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
 }
 
-html[data-theme="dark"] ::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.15); /* Lighter track for dark mode */
+body.dark-mode .stSidebar {
+    background-color: #2d2d2d;
+    color: #e0e0e0;
 }
 
-::-webkit-scrollbar-thumb {
-    background: #00cec9; /* Teal thumb */
-    border-radius: 10px;
-    border: 3px solid transparent; /* Creates more padding effect */
-    background-clip: padding-box;
-    transition: background 0.4s ease; /* Smooth hover transition */
+body.dark-mode .stSidebar .stButton > button {
+    background-color: #3a3a3a;
+    color: #e0e0e0;
+    border-color: #555;
 }
 
-::-webkit-scrollbar-thumb:hover {
-    background: #00b0a8; /* Darker teal on hover */
+body.dark-mode .stSidebar .stButton > button:hover {
+    background-color: #4a4a4a;
+    border-color: #666;
 }
 
-/* Main content block container */
-.main .block-container {
-    padding: 4rem; /* Increased padding for even more breathing room */
-    border-radius: 35px; /* Even more rounded corners */
-    /* Background and shadow will be set dynamically by Streamlit based on dark_mode toggle */
-    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.15); /* Deeper, softer shadow */
-    animation: fadeInScaleBounce 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; /* New animation with bounce */
-    transition: background 0.7s ease-in-out, box-shadow 0.7s ease-in-out, border 0.7s ease-in-out;
-    border: 1px solid rgba(0, 0, 0, 0.08); /* More defined subtle border */
-    margin-bottom: 3.5rem; /* Ensure space below main container */
-    overflow: hidden; /* Ensure shadows and content are clipped correctly */
+body.dark-mode .stTextInput > div > div > input,
+body.dark-mode .stTextArea > div > div > textarea,
+body.dark-mode .stSelectbox > div > div > div {
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+    border-color: #555;
 }
 
-html[data-theme="dark"] .main .block-container {
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6); /* Stronger shadow for dark mode */
+body.dark-mode .stSlider > div > div > div > div {
+    background-color: #00cec9; /* Accent color for slider fill */
 }
 
-@keyframes fadeInScaleBounce {
-    0% {
-        opacity: 0;
-        transform: translateY(60px) scale(0.95);
-    }
-    70% {
-        opacity: 1;
-        transform: translateY(-10px) scale(1.01); /* Slight bounce up */
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+body.dark-mode .stProgress > div > div > div {
+    background-color: #00cec9; /* Accent color for progress bar */
 }
 
-/* Header (h1-h6) styling */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    color: #00cec9; /* Consistent teal for headers */
-    font-weight: 800; /* Bolder headers */
-    letter-spacing: -0.05em; /* Even tighter letter spacing for impact */
-    line-height: 1.1;
-    margin-bottom: 1em; /* More space below headers */
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* More pronounced text shadow for depth */
+body.dark-mode .stAlert {
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+    border-color: #555;
 }
 
-/* Dashboard specific header */
-.dashboard-header {
-    font-size: 4rem; /* Largest header for dashboard title */
-    font-weight: 900; /* Extra bold */
-    padding-bottom: 1.5rem;
-    border-bottom: 8px solid #00cec9; /* Thicker, more impactful border */
-    display: inline-block;
-    margin-bottom: 4rem;
-    animation: slideInLeftFadeBounce 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; /* Smoother easing function with bounce */
-    position: relative;
-    /* Add a subtle underline animation */
-    overflow: hidden;
+body.dark-mode .stExpander {
+    background-color: #2d2d2d;
+    border-color: #555;
 }
 
-@keyframes slideInLeftFadeBounce {
-    0% {
-        transform: translateX(-100px);
-        opacity: 0;
-    }
-    60% {
-        transform: translateX(10px); /* Overshoot for bounce effect */
-        opacity: 1;
-    }
-    100% {
-        transform: translateX(0);
-        opacity: 1;
-    }
+body.dark-mode .stExpander > div > div > div {
+    color: #e0e0e0;
 }
 
-/* Greeting message animation */
-@keyframes slideInDownFadeIn {
-    0% {
-        opacity: 0;
-        transform: translateY(-50px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
+body.dark-mode .stDataFrame {
+    color: #e0e0e0;
 }
 
-.greeting-message {
-    font-size: 2rem; /* Larger greeting message */
-    font-weight: 700; /* Bolder greeting */
-    color: #00cec9;
-    margin-bottom: 2.5rem;
-    animation: slideInDownFadeIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother animation */
-    text-shadow: 0 3px 8px rgba(0, 0, 0, 0.2); /* More pronounced shadow */
+/* Streamlit Specific Overrides (adjust as needed) */
+.stApp {
+    background-color: #f0f2f6; /* Light mode background */
+    transition: background-color 0.3s;
 }
 
-/* Metric boxes styling */
-.stMetric {
-    border-radius: 25px; /* Even more rounded corners */
-    padding: 2rem; /* More padding */
-    margin-bottom: 2rem;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12); /* Softer initial shadow */
-    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.5s ease-in-out;
-    overflow: hidden;
-    position: relative;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    perspective: 1000px; /* For 3D transforms */
-    background: linear-gradient(145deg, rgba(255,255,255,0.98), rgba(240,242,246,0.9)); /* Subtle gradient for light mode */
+.stSidebar {
+    background-color: #ffffff; /* Light mode sidebar */
+    box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+    transition: background-color 0.3s;
 }
 
-html[data-theme="dark"] .stMetric {
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    background: linear-gradient(145deg, #3A3A3A, #2D2D2D); /* Darker gradient for dark mode */
-}
-
-.stMetric:hover {
-    transform: translateY(-15px) rotateX(3deg); /* More pronounced lift and 3D tilt */
-    box-shadow: 0 25px 55px rgba(0, 0, 0, 0.3); /* Stronger, softer shadow on hover */
-    animation: metricHoverGlow 0.8s forwards;
-}
-
-@keyframes metricHoverGlow {
-    0% {
-        box-shadow: 0 25px 55px rgba(0, 0, 0, 0.3);
-    }
-    50% {
-        box-shadow: 0 25px 65px rgba(0, 206, 201, 0.4), 0 25px 55px rgba(0, 0, 0, 0.3);
-    }
-    100% {
-        box-shadow: 0 25px 55px rgba(0, 0, 0, 0.3);
-    }
-}
-
-.stMetric > div[data-testid="stMetricValue"] {
-    font-size: 4rem; /* Even larger metric value */
-    font-weight: 900; /* Bolder metric value */
-    color: #00cec9;
-    animation: pulseValue 3s infinite alternate ease-in-out; /* Slower, more subtle pulse */
-    text-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-@keyframes pulseValue {
-    0% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    100% {
-        transform: scale(1.05);
-        opacity: 0.9;
-    }
-}
-
-.stMetric > div[data-testid="stMetricLabel"] {
-    font-size: 1.4rem; /* Slightly larger label */
-    opacity: 0.8;
+/* Headers */
+h1, h2, h3, h4, h5, h6 {
+    color: #007bff; /* A nice blue for headers */
     font-weight: 600;
 }
 
-/* Button styling */
+/* Buttons */
 .stButton > button {
-    background-color: #00cec9;
+    background-color: #00cec9; /* Teal button */
     color: white;
-    border-radius: 18px; /* More rounded */
-    padding: 1rem 2rem; /* More padding */
-    font-weight: 700; /* Bolder text */
+    border-radius: 8px;
     border: none;
-    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother transition */
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); /* Softer initial shadow */
+    padding: 10px 20px;
+    font-size: 16px;
     cursor: pointer;
-    letter-spacing: 0.05em; /* Slightly more spaced letters */
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    text-transform: uppercase; /* Uppercase text for buttons */
-    /* Add subtle background pattern on button */
-    background-image: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 70%);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0, 206, 201, 0.2);
 }
 
 .stButton > button:hover {
-    background-color: #00b0a8;
-    transform: translateY(-8px); /* More pronounced lift */
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); /* Stronger, softer shadow on hover */
-    outline: 3px solid rgba(0, 206, 201, 0.6); /* More prominent outline glow on hover */
-    outline-offset: 4px;
+    background-color: #00a8a3; /* Darker teal on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 206, 201, 0.3);
 }
 
-.stButton > button:active {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-    background-color: #009a93;
-}
-
-/* Ripple effect for buttons */
-.stButton > button:after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 10px; /* Larger initial ripple */
-    height: 10px;
-    background: rgba(255, 255, 255, 0.6); /* Brighter ripple */
-    border-radius: 50%;
-    opacity: 0;
-    transform: scale(1) translate(-50%, -50%);
-    transition: all 0.7s ease-out; /* Longer ripple animation */
-    z-index: -1;
-}
-
-.stButton > button:active:after {
-    transform: scale(40) translate(-50%, -50%); /* Even larger ripple */
-    opacity: 1;
-    transition: 0s;
-}
-
-/* Expander styling */
-.stExpander {
-    border-radius: 20px; /* More rounded */
-    padding: 2rem; /* More padding */
-    margin-bottom: 2rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Softer initial shadow */
-    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    border: 1px solid rgba(0, 0, 0, 0.06);
-    background: rgba(255,255,255,0.95); /* Light background */
-}
-
-html[data-theme="dark"] .stExpander {
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    background: #3A3A3A; /* Dark background */
-}
-
-.stExpander:hover {
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2); /* Stronger, softer shadow on hover */
-    transform: translateY(-8px); /* More pronounced lift on hover */
-}
-
-.stExpander > div > div > div > p {
-    line-height: 1.9; /* Even better readability */
-    font-size: 1.05rem;
-}
-
-.stExpander > div[data-testid="stExpanderToggle"] {
-    color: #00cec9;
-    font-weight: 700;
-    font-size: 1.4rem; /* Larger expander title */
-    cursor: pointer;
-    padding-bottom: 0.8rem;
-}
-
-.stExpander > div[data-testid="stExpanderToggle"] svg {
-    fill: #00cec9;
-    transition: transform 0.4s ease;
-}
-
-.stExpander > div[data-testid="stExpanderToggle"][aria-expanded="true"] svg {
-    transform: rotate(90deg);
-}
-
-/* Form Elements Styling */
-
-/* Selectbox styling */
-.stSelectbox > div > div {
-    border-radius: 18px; /* More rounded */
-    border: 1px solid rgba(0, 0, 0, 0.15); /* Slightly more visible border */
-    transition: all 0.4s ease;
-    cursor: pointer;
-    padding: 0.8rem 1.2rem; /* Adjust padding */
-    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.08); /* Deeper inner shadow for depth */
-    background: rgba(255,255,255,0.9);
-}
-
-html[data-theme="dark"] .stSelectbox > div > div {
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.08);
-    background: #3A3A3A;
-}
-
-.stSelectbox > div > div:hover {
-    border-color: #00cec9;
-    box-shadow: 0 0 0 4px rgba(0, 206, 201, 0.4); /* Stronger glow */
-}
-
-.stSelectbox > div > div:focus-within {
-    border-color: #00cec9;
-    box-shadow: 0 0 0 5px rgba(0, 206, 201, 0.6);
-    outline: none;
-}
-
-.stSelectbox > label {
-    font-weight: 600;
-    margin-bottom: 0.7rem;
-    display: block;
-    font-size: 1.1rem; /* Slightly larger label text */
-}
-
-/* Text input and Text area styling */
+/* Text Inputs, Text Areas, Selectboxes */
 .stTextInput > div > div > input,
-.stTextArea > div > div {
-    border-radius: 18px; /* More rounded */
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    padding: 1.1rem 1.4rem; /* More padding */
-    transition: all 0.4s ease;
-    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.08); /* Deeper inner shadow for depth */
-    background: rgba(255,255,255,0.9);
+.stTextArea > div > div > textarea,
+.stSelectbox > div > div > div {
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    padding: 10px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
 }
 
-html[data-theme="dark"] .stTextInput > div > div > input,
-html[data-theme="dark"] .stTextArea > div > div {
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.08);
-    background: #3A3A3A;
+/* Sliders */
+.stSlider > div > div > div > div {
+    background-color: #00cec9; /* Teal for slider fill */
 }
 
-.stTextInput > div > div > input:focus,
-.stTextArea > div > div:focus-within {
-    border-color: #00cec9;
-    box-shadow: 0 0 0 5px rgba(0, 206, 201, 0.6);
-    outline: none;
-}
-
-.stTextInput > div > div > input:hover,
-.stTextArea > div > div:hover {
-    border-color: #00b0a8;
-}
-
-.stTextInput > label,
-.stTextArea > label {
-    font-weight: 600;
-    margin-bottom: 0.7rem;
-    display: block;
-    font-size: 1.1rem;
-}
-
-/* Radio button styling */
-.stRadio > label {
-    /* Existing styling (color set dynamically) */
-}
-
-/* Custom styling for st.sidebar.radio to make it look like buttons */
-.stSidebar .stRadio div[role="radiogroup"] {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem; /* More space between buttons */
-}
-
-.stSidebar .stRadio div[role="radiogroup"] label {
-    border-radius: 20px; /* Even more rounded */
-    padding: 1.2rem 1.8rem; /* More padding */
-    font-weight: 600;
-    border: none;
-    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother transition for sidebar items */
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1); /* Softer initial shadow */
-    width: 100%;
-    text-align: left;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-    background: rgba(255,255,255,0.9); /* Light background for sidebar items */
-}
-
-html[data-theme="dark"] .stSidebar .stRadio div[role="radiogroup"] label {
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
-    background: #3A3A3A; /* Dark background for sidebar items */
-}
-
-.stSidebar .stRadio div[role="radiogroup"] label span:first-child {
-    display: none;
-}
-
-.stSidebar .stRadio div[role="radiogroup"] label:hover {
-    background-color: rgba(0, 206, 201, 0.2); /* More prominent teal hover */
-    transform: translateX(12px); /* More pronounced slide */
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25); /* Stronger shadow on hover */
-}
-
-/* Style for the selected radio button (using input:checked + div) */
-.stSidebar .stRadio div[role="radiogroup"] input:checked + div {
-    background-color: #00cec9;
-    color: white;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
-    transform: translateX(0);
-    border: 1px solid #00a09a;
-    animation: sidebarSelectedPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Smoother, bouncier pop */
-}
-
-@keyframes sidebarSelectedPop {
-    0% {
-        transform: scale(0.9);
-    }
-    70% {
-        transform: scale(1.03); /* More overshoot */
-    }
-    100% {
-        transform: scale(1);
-    }
-}
-
-.stSidebar .stRadio div[role="radiogroup"] label p {
-    font-weight: 600;
-    font-size: 1.1rem; /* Slightly larger text in sidebar */
-}
-
-.stSidebar .stRadio div[role="radiogroup"] input:checked + div p {
-    color: white;
-}
-
-/* Custom styling for the dataframes */
-.stDataFrame {
-    border-radius: 20px; /* More rounded */
-    overflow: hidden;
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15); /* Softer, larger shadow */
-    transition: box-shadow 0.5s ease;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    background: rgba(255,255,255,0.98); /* Light background */
-}
-
-html[data-theme="dark"] .stDataFrame {
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: #303030; /* Slightly darker base */
-}
-
-.stDataFrame:hover {
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25); /* Slightly more pronounced shadow on hover */
-}
-
-.stDataFrame table {
-    border-collapse: separate;
-    border-spacing: 0;
-    width: 100%;
-}
-
-.stDataFrame th {
-    font-weight: 700;
-    padding: 1.2rem 1.5rem; /* More padding */
-    text-align: left;
-    border-bottom: 5px solid #00cec9; /* Thicker teal border for headers */
-    position: sticky;
-    top: 0;
-    z-index: 2;
-    transition: background-color 0.5s ease, color 0.5s ease;
-}
-
-.stDataFrame tbody tr:nth-child(odd) {
-    /* Background will be set dynamically by Streamlit based on dark_mode toggle */
-}
-
-.stDataFrame tbody tr:nth-child(even) {
-    /* Background will be set dynamically by Streamlit based on dark_mode toggle */
-}
-
-.stDataFrame td {
-    padding: 1.1rem 1.5rem; /* More padding */
-    border-bottom: 1px solid rgba(0, 0, 0, 0.12); /* More visible row divider */
-    transition: background-color 0.4s ease, color 0.4s ease;
-}
-
-.stDataFrame tbody tr:hover {
-    background-color: rgba(0, 206, 201, 0.12) !important; /* Light teal row hover */
-}
-
-/* Dark mode specific table styling */
-html[data-theme="dark"] .stDataFrame table {
-    background-color: #303030;
-    color: #F5F5F5;
-}
-
-html[data-theme="dark"] .stDataFrame th {
-    background-color: #404040;
-    color: #00cec9;
-    border-bottom: 5px solid #00cec9;
-}
-
-html[data-theme="dark"] .stDataFrame tbody tr:nth-child(odd) {
-    background-color: #303030;
-}
-
-html[data-theme="dark"] .stDataFrame tbody tr:nth-child(even) {
-    background-color: #282828; /* Alternating darker row */
-}
-
-html[data-theme="dark"] .stDataFrame td {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-html[data-theme="dark"] .stDataFrame tbody tr:hover {
-    background-color: rgba(0, 206, 201, 0.18) !important; /* Darker teal row hover */
-}
-
-
-/* Info/Warning/Error/Success boxes */
-.stAlert {
-    border-radius: 18px; /* More rounded */
-    padding: 2rem; /* More padding */
-    margin-bottom: 2rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-    animation: fadeInSlideUp 0.8s ease-out; /* New animation: fade in and slight slide up */
-    transition: all 0.5s ease;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    position: relative;
-    overflow: hidden;
-}
-
-html[data-theme="dark"] .stAlert {
-    border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-@keyframes fadeInSlideUp {
-    0% {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.stAlert:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
-}
-
-/* Specific alert types (Streamlit's internal classes are targeted) */
-.stAlert.st-emotion-cache-1f0o48a.e1f1d6gn0 {
-    /* Info */
-    background-color: #E0F7FA;
-    color: #006064;
-    border-left: 8px solid #00BCD4; /* Thicker border */
-}
-
-.stAlert.st-emotion-cache-1f0o48a.e1f1d6gn0 svg {
-    fill: #00BCD4;
-}
-
-html[data-theme="dark"] .stAlert.st-emotion-cache-1f0o48a.e1f1d6gn0 {
-    background-color: #2A3C4D;
-    color: #A7D9EB;
-    border-left: 8px solid #00B8D4;
-}
-
-html[data-theme="dark"] .stAlert.st-emotion-cache-1f0o48a.e1f1d6gn0 svg {
-    fill: #00B8D4;
-}
-
-.stAlert.st-emotion-cache-1f0o48a.e1f1d6gn1 {
-    /* Success */
-    background-color: #E8F5E9;
-    color: #2E7D32;
-    border-left: 8px solid #4CAF50;
-}
-
-.stAlert.st-emotion-cache-1f0o48a.e1f1d6gn1 svg {
-    fill: #4CAF50;
-}
-
-html[data-theme="dark"] .stAlert.st-emotion-cache-1f0o48a.e1f1d6gn1 {
-    background-color: #2C472C;
-    color: #A8D5A8;
-    border-left: 8px solid #4CAF50;
-}
-
-html[data-theme="dark"] .stAlert.st-emotion-cache-1f0o48a.e1f1d6gn1 svg {
-    fill: #4CAF50;
-}
-
-.stAlert.st-emotion-cache-1f0o48a.e1f1d6gn2 {
-    /* Warning */
-    background-color: #FFFDE7;
-    color: #FF8F00;
-    border-left: 8px solid #FFC107;
-}
-
-.stAlert.st-emotion-cache-1f0o48a.e1f1d6gn2 svg {
-    fill: #FFC107;
-}
-
-html[data-theme="dark"] .stAlert.st-emotion-cache-1f0o48a.e1f1d6gn2 {
-    background-color: #4D422C;
-    color: #EBD9A7;
-    border-left: 8px solid #FFC107;
-}
-
-html[data-theme="dark"] .stAlert.st-emotion-cache-1f0o48a.e1f1d6gn2 svg {
-    fill: #FFC107;
-}
-
-.stAlert.st-emotion-cache-1f0o48a.e1f1d6gn3 {
-    /* Error */
-    background-color: #FFEBEE;
-    color: #D32F2F;
-    border-left: 8px solid #F44336;
-}
-
-.stAlert.st-emotion-cache-1f0o48a.e1f1d6gn3 svg {
-    fill: #F44336;
-}
-
-html[data-theme="dark"] .stAlert.st-emotion-cache-1f0o48a.e1f1d6gn3 {
-    background-color: #4D2C2C;
-    color: #EBA7A7;
-    border-left: 8px solid #F44336;
-}
-
-html[data-theme="dark"] .stAlert.st-emotion-cache-1f0o48a.e1f1d6gn3 svg {
-    fill: #F44336;
-}
-
-/* Top Header Styles */
-.top-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 2rem 4rem; /* More padding */
-    /* Background, border, and shadow will be set dynamically by Streamlit based on dark_mode toggle */
-    margin-bottom: 4rem;
-    border-radius: 30px; /* More rounded */
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18); /* Softer, larger shadow */
-    transition: background-color 0.5s ease-in-out, box-shadow 0.5s ease-in-out, border-color 0.5s ease-in-out;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    animation: slideInDownFadeIn 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother animation */
-    background: linear-gradient(145deg, rgba(255,255,255,0.99), rgba(245,247,250,0.9)); /* Subtle gradient */
-}
-
-html[data-theme="dark"] .top-header {
-    background: linear-gradient(145deg, #282828, #202020); /* Darker gradient for dark mode */
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
-}
-
-.top-header h1 {
-    margin: 0;
-    color: #00cec9;
-    font-size: 2.8rem; /* Larger font size */
-    font-weight: 900;
-    letter-spacing: -0.06em; /* Even tighter spacing for title */
-    text-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
-}
-
-.top-header .profile {
-    font-size: 1.2rem; /* Slightly larger font */
-    display: flex;
-    align-items: center;
-    gap: 1rem; /* More space between elements */
-    font-weight: 600;
-}
-
-html[data-theme="dark"] .top-header .profile {
-    color: #F8F8F8;
-}
-
-.top-header .profile a {
-    text-decoration: none;
-    font-weight: 600;
-    transition: color 0.3s ease, text-decoration 0.3s ease;
-}
-
-html[data-theme="dark"] .top-header .profile a {
-    color: #f8fafd;
-}
-
-.top-header .profile a:hover {
-    color: #00b0a8;
-    text-decoration: underline;
-}
-
-/* Additional User-Friendly Enhancements & Animations */
-
-/* Card-like containers for general elements */
-.stCard {
-    border-radius: 25px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
-    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.5s ease-in-out;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    position: relative;
-    background: rgba(255,255,255,0.98);
-}
-
-html[data-theme="dark"] .stCard {
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    background: #303030;
-}
-
-.stCard:hover {
-    transform: translateY(-12px);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
-}
-
-/* Progress Bar Styling */
-.stProgress > div > div {
-    border-radius: 15px;
-    height: 16px; /* Even thicker progress bar */
-    background-color: rgba(0, 206, 201, 0.3); /* Slightly darker background for progress track */
-    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.15); /* Deeper inner shadow */
-}
-
+/* Progress Bars */
 .stProgress > div > div > div {
-    background-color: #00cec9;
-    border-radius: 15px;
-    transition: width 0.8s ease-out; /* Slower, smoother fill animation */
-    position: relative;
-    overflow: hidden;
+    background-color: #00cec9; /* Teal for progress bar */
 }
 
-.stProgress > div > div > div::after { /* Animated stripe effect */
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    background-image: linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
-    background-size: 1.2rem 1.2rem; /* Slightly larger stripes */
-    animation: progressStripe 1s linear infinite;
-    border-radius: 15px;
+/* Expander */
+.stExpander {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
-@keyframes progressStripe {
-    from {
-        background-position: 1.2rem 0;
-    }
-    to {
-        background-position: 0 0;
-    }
+.stExpander > div > div > div {
+    font-weight: 600;
 }
 
-/* Checkbox and Radio Button Circles (visual enhancement) */
-.stCheckbox > label > div > span:first-child,
-.stRadio > label > div > span:first-child {
-    border-radius: 50%;
-    border: 3px solid #00cec9; /* Thicker border */
-    width: 1.4em; /* Slightly larger */
-    height: 1.4em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.4s ease;
-    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.15); /* Deeper inner shadow */
+/* Info, Success, Warning, Error messages */
+.stAlert {
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
 }
 
-.stCheckbox > label > div > span:first-child svg,
-.stRadio > label > div > span:first-child svg {
-    fill: #00cec9;
-    transform: scale(0); /* Hide initially */
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Spring-like animation */
+/* Custom logo styling */
+.screenerpro-logo {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-.stCheckbox > label > div > input:checked + span:first-child,
-.stRadio > label > div > input:checked + span:first-child {
-    background-color: #00cec9;
-    border-color: #00cec9;
-    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.15), 0 0 0 5px rgba(0, 206, 201, 0.4); /* Outer glow on checked */
+/* Specific styling for the "Invite Top Candidate for Interview" button (if using raw HTML) */
+a button {
+    background-color:#00cec9;
+    color:white;
+    border:none;
+    padding:10px 20px;
+    text-align:center;
+    text-decoration:none;
+    display:inline-block;
+    font-size:16px;
+    margin:4px 2px;
+    cursor:pointer;
+    border-radius:8px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0, 206, 201, 0.2);
 }
 
-.stCheckbox > label > div > input:checked + span:first-child svg,
-.stRadio > label > div > input:checked + span:first-child svg {
-    transform: scale(1); /* Show with animation */
-    fill: white; /* White checkmark when checked */
+a button:hover {
+    background-color:#00a8a3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 206, 201, 0.3);
 }
 
-html[data-theme="dark"] .stCheckbox > label > div > span:first-child,
-html[data-theme="dark"] .stRadio > label > div > span:first-child {
-    border-color: #00b0a8;
-    box-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.15);
+/* Adjustments for Streamlit's native headers with divider */
+.st-emotion-cache-10q7j1l { /* This class might change, but targets the header with divider */
+    color: #007bff; /* Consistent header color */
 }
 
-html[data-theme="dark"] .stCheckbox > label > div > span:first-child svg,
-html[data-theme="dark"] .stRadio > label > div > span:first-child svg {
-    fill: #fff;
+/* Custom styles for the Streamlit status box (for email sending) */
+.st-emotion-cache-1c7y2kd { /* This class might change */
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
-html[data-theme="dark"] .stCheckbox > label > div > input:checked + span:first-child,
-html[data-theme="dark"] .stRadio > label > div > input:checked + span:first-child {
-    background-color: #00b0a8;
-    border-color: #00b0a8;
-    box-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.15), 0 0 0 5px rgba(0, 176, 168, 0.5);
+/* Ensure images fit well */
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px; /* Consistent rounded corners */
 }
 
-/* Tooltip styling (for custom tooltips if added) */
-.stTooltip {
-    background-color: rgba(0, 0, 0, 0.95); /* Even darker, more opaque */
-    color: white;
-    border-radius: 12px;
-    padding: 0.7rem 1.4rem;
-    font-size: 1rem; /* Slightly larger font */
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.4s ease, transform 0.4s ease;
-    transform: translateY(20px);
-    backdrop-filter: blur(8px); /* More blur effect */
+/* Dataframe styling */
+.stDataFrame {
+    border-radius: 8px;
+    overflow: hidden; /* Ensures rounded corners apply to content */
 }
 
-.stTooltip.show {
-    opacity: 1;
-    transform: translateY(0);
+/* Scrollable sections if needed */
+.scrollable-content {
+    max-height: 400px; /* Example height */
+    overflow-y: auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 10px;
 }
 
-/* Global text styling for readability */
-p {
-    line-height: 1.9;
-    margin-bottom: 1.5em;
-    font-size: 1.1rem; /* Larger base text */
-}
-
-/* Link styling */
-a {
-    color: #00cec9;
-    text-decoration: none;
-    transition: color 0.3s ease, text-decoration 0.3s ease;
-    font-weight: 600; /* Bolder links */
-}
-
-a:hover {
-    color: #00b0a8;
-    text-decoration: underline;
-}
-
-/* Utility Classes (can be added via st.markdown('<div class="my-class">...</div>', unsafe_allow_html=True)) */
-.text-center {
-    text-align: center;
-}
-
-.text-right {
-    text-align: right;
-}
-
-.fade-in {
-    animation: fadeIn 0.8s ease-in-out forwards;
-}
-
-.slide-up {
-    animation: fadeInSlideUp 0.9s ease-out forwards;
-}
-
-/* Responsive Design (Enhanced Breakpoints) */
-@media (max-width: 1024px) { /* Tablet landscape */
-    .main .block-container {
-        padding: 3rem;
-        border-radius: 25px;
-    }
-    .dashboard-header {
-        font-size: 3.2rem;
-        margin-bottom: 3rem;
-    }
-    .greeting-message {
-        font-size: 1.6rem;
-    }
-    .stMetric {
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
-    }
-    .stMetric > div[data-testid="stMetricValue"] {
-        font-size: 3rem;
-    }
-    .stMetric > div[data-testid="stMetricLabel"] {
-        font-size: 1.2rem;
-    }
-    .top-header {
-        padding: 1.5rem 3rem;
-        margin-bottom: 3rem;
-        border-radius: 25px;
-    }
-    .top-header h1 {
-        font-size: 2.2rem;
-    }
-    .top-header .profile {
-        font-size: 1.05rem;
-    }
-    .stButton > button {
-        padding: 0.8rem 1.6rem;
-        font-size: 0.95rem;
-    }
-    .stExpander {
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
-    }
-    .stExpander > div[data-testid="stExpanderToggle"] {
-        font-size: 1.2rem;
-    }
-    .stSelectbox > div > div,
-    .stTextInput > div > div > input,
-    .stTextArea > div > div {
-        padding: 0.9rem 1.2rem;
-    }
-    .stSelectbox > label,
-    .stTextInput > label,
-    .stTextArea > label {
-        font-size: 1rem;
-    }
-    .stDataFrame th,
-    .stDataFrame td {
-        padding: 1rem 1.2rem;
-    }
-    .stAlert {
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
-        border-radius: 15px;
-        border-left-width: 7px;
-    }
-    p {
-        font-size: 1rem;
-    }
-}
-
-@media (max-width: 768px) { /* Tablet portrait & large mobile */
-    .main .block-container {
-        padding: 2.5rem;
-        border-radius: 20px;
-    }
-    .dashboard-header {
-        font-size: 2.8rem;
-        margin-bottom: 2.5rem;
-        border-bottom-width: 6px;
-    }
-    .greeting-message {
-        font-size: 1.4rem;
-        margin-bottom: 2rem;
-    }
-    .stMetric {
-        padding: 1.2rem;
-        margin-bottom: 1.2rem;
-    }
-    .stMetric > div[data-testid="stMetricValue"] {
-        font-size: 2.8rem;
-    }
-    .stMetric > div[data-testid="stMetricLabel"] {
-        font-size: 1.1rem;
-    }
-    .top-header {
-        padding: 1.2rem 2rem;
-        margin-bottom: 2.5rem;
-        border-radius: 20px;
-        flex-direction: column; /* Stack elements on smaller screens */
-        align-items: flex-start;
-        gap: 0.8rem;
-    }
-    .top-header h1 {
-        font-size: 2rem;
-    }
-    .top-header .profile {
-        font-size: 1rem;
-    }
-    .stButton > button {
-        padding: 0.7rem 1.4rem;
-        font-size: 0.9rem;
-    }
-    .stExpander {
-        padding: 1.2rem;
-        margin-bottom: 1.2rem;
-    }
-    .stExpander > div[data-testid="stExpanderToggle"] {
-        font-size: 1.1rem;
-    }
-    .stSelectbox > div > div,
-    .stTextInput > div > div > input,
-    .stTextArea > div > div {
-        padding: 0.8rem 1.1rem;
-    }
-    .stSelectbox > label,
-    .stTextInput > label,
-    .stTextArea > label {
-        font-size: 0.98rem;
-    }
-    .stDataFrame th,
-    .stDataFrame td {
-        padding: 0.8rem 1.1rem;
-    }
-    .stAlert {
-        padding: 1.2rem;
-        margin-bottom: 1.2rem;
-        border-radius: 15px;
-        border-left-width: 6px;
-    }
-    p {
-        font-size: 0.98rem;
-    }
-}
-
-@media (max-width: 480px) { /* Small mobile */
-    .main .block-container {
-        padding: 1.5rem;
-        border-radius: 15px;
-    }
-    .dashboard-header {
-        font-size: 2.2rem;
-        margin-bottom: 2rem;
-        border-bottom-width: 4px;
-    }
-    .greeting-message {
-        font-size: 1.2rem;
-        margin-bottom: 1.5rem;
-    }
-    .stMetric {
-        padding: 1rem;
-        margin-bottom: 1rem;
-    }
-    .stMetric > div[data-testid="stMetricValue"] {
-        font-size: 2.2rem;
-    }
-    .stMetric > div[data-testid="stMetricLabel"] {
-        font-size: 0.9rem;
-    }
-    .top-header {
-        padding: 0.8rem 1rem;
-        margin-bottom: 2rem;
-        border-radius: 12px;
-    }
-    .top-header h1 {
-        font-size: 1.5rem;
-    }
-    .top-header .profile {
-        font-size: 0.85rem;
-    }
-    .stButton > button {
-        padding: 0.5rem 1rem;
-        font-size: 0.85rem;
-    }
-    .stExpander {
-        padding: 1rem;
-        margin-bottom: 1rem;
-    }
-    .stExpander > div[data-testid="stExpanderToggle"] {
-        font-size: 1rem;
-    }
-    .stSelectbox > div > div,
-    .stTextInput > div > div > input,
-    .stTextArea > div > div {
-        padding: 0.6rem 0.9rem;
-    }
-    .stSelectbox > label,
-    .stTextInput > label,
-    .stTextArea > label {
-        font-size: 0.9rem;
-    }
-    .stDataFrame th,
-    .stDataFrame td {
-        padding: 0.6rem 0.9rem;
-    }
-    .stAlert {
-        padding: 1rem;
-        margin-bottom: 1rem;
-        border-radius: 10px;
-        border-left-width: 4px;
-    }
-    p {
-        font-size: 0.9rem;
-    }
+/* Small adjustments for overall padding and spacing */
+.stApp > header, .stApp > div > section {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }
