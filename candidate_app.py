@@ -28,6 +28,9 @@ from email import encoders # For encoding attachments
 # CRITICAL: Disable Hugging Face tokenizers parallelism to avoid deadlocks
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
+# --- Streamlit Page Configuration (MUST be at the very top) ---
+st.set_page_config(page_title="Candidate Screener – AI Resume Match", layout="centered", page_icon="📄")
+
 # Global NLTK download check (should run once)
 try:
     nltk.data.find('corpora/stopwords')
@@ -1871,7 +1874,6 @@ def candidate_screener_page():
                 """)
     
 # --- Main Candidate App Logic ---
-st.set_page_config(page_title="Candidate Screener – AI Resume Match", layout="centered", page_icon="📄")
 
 # --- Dark Mode Toggle (simplified for candidate app) ---
 dark_mode = st.sidebar.toggle("🌙 Dark Mode", key="dark_mode_candidate")
@@ -1888,12 +1890,6 @@ def load_css(file_name):
 css_content = load_css(STYLE_CSS_FILE)
 st.markdown(f"""
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-/* Apply dark/light mode class to body */
-body {{
-    {f"background-color: var(--dark-bg); color: var(--dark-text);" if dark_mode else f"background-color: var(--light-bg); color: var(--light-text);"}
-}}
-</style>
 <style>{css_content}</style>
 <script>
     // JavaScript to apply dark/light mode class to body based on Streamlit toggle
