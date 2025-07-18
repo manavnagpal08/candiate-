@@ -1002,7 +1002,7 @@ def semantic_score_calculation(jd_embedding, resume_embedding, years_exp, cgpa, 
     semantic_similarity = cosine_similarity(jd_embedding.reshape(1, -1), resume_embedding.reshape(1, -1))[0][0]
     semantic_similarity = float(np.clip(semantic_similarity, 0, 1))
 
-    if _ml_model === None: # Changed from `is None` for robustness in case of type issues
+    if _ml_model == None: # Changed from `is None` for robustness in case of type issues
         print("DEBUG: ML model not loaded in semantic_score_calculation. Providing basic score and generic feedback.")
         basic_score = (weighted_keyword_overlap_score * 0.7)
         basic_score += min(years_exp * 5, 30)
