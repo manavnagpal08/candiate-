@@ -14,6 +14,53 @@ import collections # For defaultdict in mock screening
 USER_DB_FILE_CANDIDATE = "candidate_users.json" # Separate user database for candidates
 CANDIDATE_HISTORY_FILE = "candidate_screening_history.json"
 CANDIDATE_LEADERBOARD_FILE = "candidate_leaderboard.json"
+JD_FOLDER = "data" # Folder where JDs are stored
+
+# Ensure the JD folder exists
+if not os.path.exists(JD_FOLDER):
+    os.makedirs(JD_FOLDER)
+    # Create a dummy JD file if the folder was just created and is empty
+    dummy_jd_path = os.path.join(JD_FOLDER, "sample_software_engineer_jd.txt")
+    if not os.path.exists(dummy_jd_path):
+        with open(dummy_jd_path, "w") as f:
+            f.write("""
+            Job Title: Software Engineer
+
+            Company: InnovateTech Solutions
+
+            Location: Remote
+
+            About Us:
+            InnovateTech Solutions is a fast-growing tech company specializing in cloud-native applications and AI-driven platforms. We are looking for passionate and skilled Software Engineers to join our dynamic team and contribute to cutting-edge projects.
+
+            Responsibilities:
+            - Design, develop, test, deploy, and maintain scalable and robust software solutions.
+            - Write clean, maintainable, and efficient code in Python, Java, or Go.
+            - Collaborate with cross-functional teams to define, design, and ship new features.
+            - Participate in code reviews to ensure code quality and share knowledge.
+            - Troubleshoot, debug, and upgrade existing systems.
+            - Implement and manage CI/CD pipelines.
+            - Work with cloud platforms such as AWS, Azure, or Google Cloud.
+            - Utilize containerization technologies like Docker and Kubernetes.
+
+            Requirements:
+            - Bachelor's or Master's degree in Computer Science, Engineering, or a related field.
+            - 3+ years of professional software development experience.
+            - Strong proficiency in Python or Java.
+            - Experience with RESTful APIs and microservices architecture.
+            - Familiarity with relational and NoSQL databases (e.g., PostgreSQL, MongoDB).
+            - Solid understanding of data structures, algorithms, and object-oriented design.
+            - Experience with version control systems (Git).
+            - Excellent problem-solving and communication skills.
+
+            Preferred Qualifications:
+            - Experience with front-end frameworks (React, Angular, Vue.js).
+            - Knowledge of machine learning concepts and libraries (TensorFlow, PyTorch).
+            - Contributions to open-source projects.
+            - Experience with agile development methodologies.
+            """)
+        st.info(f"Created a sample JD: {dummy_jd_path} in the '{JD_FOLDER}' folder.")
+
 
 # --- Authentication Functions (Local JSON) ---
 def load_candidate_users():
@@ -195,6 +242,22 @@ def update_top_candidates_leaderboard_local(candidate_name, score, username):
     leaderboard.sort(key=lambda x: x.get("Score (%)", 0), reverse=True)
     save_top_candidates_local(leaderboard[:10])
 
+# --- JD Loading Function ---
+def load_jds_from_folder(folder_path):
+    """Loads all .txt files from a specified folder."""
+    jds = {}
+    if not os.path.exists(folder_path):
+        return jds
+    
+    for filename in os.listdir(folder_path):
+        if filename.endswith(".txt"):
+            file_path = os.path.join(folder_path, filename)
+            try:
+                with open(file_path, "r", encoding="utf-8") as f:
+                    jds[filename] = f.read()
+            except Exception as e:
+                st.warning(f"Could not read JD file {filename}: {e}")
+    return jds
 
 # --- Mock Resume Screening Logic (to be replaced by actual ML/NLP if available) ---
 def mock_resume_screening_logic(resume_text: str, jd_text: str):
@@ -268,7 +331,7 @@ def mock_resume_screening_logic(resume_text: str, jd_text: str):
         "AI Suggestion": "Your resume shows a good foundation. Focus on building projects related to your missing skills.",
         "Semantic Similarity": semantic_similarity,
         "File Name": uploaded_resume.name if 'uploaded_resume' in locals() else "Uploaded Resume",
-        "JD Used": "User Provided JD Text"
+        "JD Used": "User Provided JD Text" # Placeholder for user provided JD
     }
 
 # --- Certificate Generation ---
@@ -310,15 +373,41 @@ def generate_certificate_html(candidate_name, score, date, app_link="https://you
 # --- Candidate Resume Screener Page ---
 def candidate_screener_page():
     st.markdown("## 📄 Single Resume Screener for Candidates")
-    st.info("Upload your resume and paste a job description to see how well you match!")
+    st.info("Upload your resume and paste a job description or select from available JDs to see how well you match!")
 
-    # Input for Job Description
-    jd_text = st.text_area(
-        "Paste the Job Description (JD) here:",
-        height=200,
-        placeholder="e.g., We are looking for a Software Engineer with Python and AWS experience...",
-        key="candidate_jd_input"
+    # Load available JDs
+    available_jds = load_jds_from_folder(JD_FOLDER)
+    jd_options = ["Paste Job Description"] + sorted(list(available_jds.keys()))
+
+    jd_selection_method = st.radio(
+        "How would you like to provide the Job Description?",
+        jd_options,
+        key="jd_selection_method"
     )
+
+    jd_text = ""
+    selected_jd_name = "User Provided JD Text" # Default for pasted JD
+
+    if jd_selection_method == "Paste Job Description":
+        jd_text = st.text_area(
+            "Paste the Job Description (JD) here:",
+            height=200,
+            placeholder="e.g., We are looking for a Software Engineer with Python and AWS experience...",
+            key="candidate_jd_input_paste"
+        )
+    elif jd_selection_method in available_jds:
+        selected_jd_name = jd_selection_method
+        jd_text = available_jds[jd_selection_method]
+        st.text_area(
+            f"Content of '{selected_jd_name}':",
+            value=jd_text,
+            height=200,
+            disabled=True, # Make it read-only
+            key="candidate_jd_input_selected"
+        )
+    else:
+        st.warning("No JDs found in the 'data' folder. Please add some .txt files or paste a JD.")
+
 
     # File uploader for single resume
     uploaded_resume = st.file_uploader(
@@ -330,7 +419,7 @@ def candidate_screener_page():
 
     if st.button("Analyze My Resume", key="analyze_candidate_resume_button"):
         if not jd_text:
-            st.error("Please paste a Job Description.")
+            st.error("Please provide a Job Description (paste or select).")
         elif not uploaded_resume:
             st.error("Please upload your resume.")
         else:
@@ -374,6 +463,7 @@ def candidate_screener_page():
 
                 # Perform mock screening
                 screening_result = mock_resume_screening_logic(resume_content, jd_text)
+                screening_result["JD Used"] = selected_jd_name # Store the name of the JD used
                 
                 # Save the result to local history
                 if st.session_state.get('candidate_username'):
@@ -405,6 +495,8 @@ def candidate_screener_page():
                 st.write(f"**Missing Skills:** {', '.join(screening_result.get('Missing Skills', [])) if isinstance(screening_result.get('Missing Skills'), list) else screening_result.get('Missing Skills', 'None')}")
                 st.write(f"**AI Suggestion:** {screening_result.get('AI Suggestion', 'No specific suggestions.')}")
                 st.write(f"**Semantic Similarity (JD vs. Resume):** {screening_result.get('Semantic Similarity', 'N/A'):.2f}")
+                st.write(f"**JD Used:** {screening_result.get('JD Used', 'N/A')}")
+
 
                 st.success("Analysis complete!")
 
