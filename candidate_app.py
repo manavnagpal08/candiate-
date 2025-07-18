@@ -1503,7 +1503,7 @@ If you have any questions, please contact us.
         return True
     except smtplib.SMTPAuthenticationError:
         # st.error("❌ Failed to send email: Authentication error. Please check your Gmail address and App Password.") # Removed for spinner
-        # st.info("Ensure you have generated an App Password for your Gmail account and used it instead of your regular password.") # Removed for spinner
+        # st.info("Ensure you have generated an App Password for your Gmail account and used it instead of your regular password.") # Removed for caller
         return False
     except Exception as e:
         # st.error(f"❌ Failed to send email: {e}") # Removed for spinner
@@ -1600,7 +1600,7 @@ def candidate_login_section():
     login_tab, register_tab = st.sidebar.tabs(["Login", "Register"])
 
     with login_tab:
-        st.markdown("#### Existing User Login")
+        st.markdown("#### Existing User Login") # Use markdown for sub-headers within tabs
         username = st.text_input("Email", key="login_email_candidate")
         password = st.text_input("Password", type="password", key="login_password_candidate")
 
@@ -1619,7 +1619,7 @@ def candidate_login_section():
                 st.sidebar.error("User not found. Please register or check your email.")
 
     with register_tab:
-        st.markdown("#### New User Registration")
+        st.markdown("#### New User Registration") # Use markdown for sub-headers within tabs
         new_username = st.text_input("Email (for registration)", key="register_email_candidate")
         new_password = st.text_input("Password (for registration)", type="password", key="register_password_candidate")
         confirm_password = st.text_input("Confirm Password", type="password", key="confirm_password_candidate")
@@ -1654,7 +1654,7 @@ def load_jds_from_folder(folder_path):
 
 # --- Candidate Resume Screener Page ---
 def candidate_screener_page():
-    st.markdown("<h2 class='centered-header'>📄 AI Resume Matcher</h2>", unsafe_allow_html=True)
+    st.header("📄 AI Resume Matcher", divider='rainbow') # Replaced with native Streamlit header
     st.info("Upload your resume and select a job description (JD) or paste your own to see how well you match!")
 
     # Load available JDs
@@ -1674,7 +1674,7 @@ def candidate_screener_page():
     col1, col2 = st.columns([1, 1])
 
     with col1:
-        st.markdown("### 📝 Job Description")
+        st.subheader("📝 Job Description") # Replaced with native Streamlit subheader
         if jd_selection_method == "Paste Job Description":
             jd_text = st.text_area(
                 "Paste the Job Description (JD) here:",
@@ -1697,7 +1697,7 @@ def candidate_screener_page():
             st.warning("No JDs found in the 'data' folder. Please add some .txt files or paste a JD.")
     
     with col2:
-        st.markdown("### ⬆️ Upload Your Resume")
+        st.subheader("⬆️ Upload Your Resume") # Replaced with native Streamlit subheader
         # File uploader for single resume
         uploaded_resume = st.file_uploader(
             "Upload your resume here (PDF, DOCX, TXT):",
@@ -1711,54 +1711,55 @@ def candidate_screener_page():
             st.info("Please upload your resume to proceed.")
 
     st.markdown("---")
-    st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
-    if st.button("🚀 Analyze My Resume", key="analyze_candidate_resume_button", help="Click to get your resume match score! 👇"):
-        if not jd_text:
-            st.error("Please provide a Job Description (paste or select).")
-        elif not uploaded_resume:
-            st.error("Please upload your resume.")
-        else:
-            # Set default criteria for candidate app (can be made configurable later)
-            default_max_experience = 999 # Effectively no max experience for candidate self-assessment
-            default_high_priority_skills = [] # Not exposed to candidate
-            default_medium_priority_skills = [] # Not exposed to candidate
+    
+    # Centering the button using columns
+    col_left, col_center, col_right = st.columns([1, 1, 1])
+    with col_center:
+        if st.button("🚀 Analyze My Resume", key="analyze_candidate_resume_button", help="Click to get your resume match score! 👇"):
+            if not jd_text:
+                st.error("Please provide a Job Description (paste or select).")
+            elif not uploaded_resume:
+                st.error("Please upload your resume.")
+            else:
+                # Set default criteria for candidate app (can be made configurable later)
+                default_max_experience = 999 # Effectively no max experience for candidate self-assessment
+                default_high_priority_skills = [] # Not exposed to candidate
+                default_medium_priority_skills = [] # Not exposed to candidate
 
-            with st.spinner("Analyzing your resume... This may take a moment."):
-                # Read file content once
-                file_bytes = uploaded_resume.read()
+                with st.spinner("Analyzing your resume... This may take a moment."):
+                    # Read file content once
+                    file_bytes = uploaded_resume.read()
 
-                # Process the single resume using the adapted function
-                screening_result = process_single_resume_for_candidate_app(
-                    file_name=uploaded_resume.name,
-                    file_bytes=file_bytes,
-                    file_type=uploaded_resume.type,
-                    jd_text=jd_text,
-                    jd_name_for_results=selected_jd_name,
-                    high_priority_skills=default_high_priority_skills,
-                    medium_priority_skills=default_medium_priority_skills,
-                    max_experience=default_max_experience,
-                    _global_sentence_model=global_sentence_model,
-                    _global_ml_model=global_ml_model
-                )
-                
-                # Check for critical errors from processing
-                if screening_result.get("Tag") == "❌ Text Extraction Error" or screening_result.get("Tag") == "❌ Critical Processing Error":
-                    st.error(f"Failed to process resume: {screening_result.get('AI Suggestion', 'Unknown error during processing.')}")
-                    return # Stop execution if there's a critical error
-
-                # Save the result to local history
-                if st.session_state.get('candidate_username'):
-                    save_candidate_screening_result_local(st.session_state.candidate_username, screening_result)
-                    # Update local leaderboard
-                    update_top_candidates_leaderboard_local(
-                        screening_result.get('Candidate Name', 'Anonymous'),
-                        screening_result.get('Score (%)', 0),
-                        st.session_state.candidate_username
+                    # Process the single resume using the adapted function
+                    screening_result = process_single_resume_for_candidate_app(
+                        file_name=uploaded_resume.name,
+                        file_bytes=file_bytes,
+                        file_type=uploaded_resume.type,
+                        jd_text=jd_text,
+                        jd_name_for_results=selected_jd_name,
+                        high_priority_skills=default_high_priority_skills,
+                        medium_priority_skills=default_medium_priority_skills,
+                        max_experience=default_max_experience,
+                        _global_sentence_model=global_sentence_model,
+                        _global_ml_model=global_ml_model
                     )
+                    
+                    # Check for critical errors from processing
+                    if screening_result.get("Tag") == "❌ Text Extraction Error" or screening_result.get("Tag") == "❌ Critical Processing Error":
+                        st.error(f"Failed to process resume: {screening_result.get('AI Suggestion', 'Unknown error during processing.')}")
+                        return # Stop execution if there's a critical error
 
-                st.markdown("</div>", unsafe_allow_html=True) # Close center div
+                    # Save the result to local history
+                    if st.session_state.get('candidate_username'):
+                        save_candidate_screening_result_local(st.session_state.candidate_username, screening_result)
+                        # Update local leaderboard
+                        update_top_candidates_leaderboard_local(
+                            screening_result.get('Candidate Name', 'Anonymous'),
+                            screening_result.get('Score (%)', 0),
+                            st.session_state.candidate_username
+                        )
 
-                st.markdown("<h3 class='centered-header'>✨ Your Resume Analysis Results:</h3>", unsafe_allow_html=True)
+                st.subheader("✨ Your Resume Analysis Results:") # Replaced with native Streamlit subheader
 
                 col_score, col_exp, col_cgpa = st.columns(3)
                 col_score.metric("Your Match Score", f"{screening_result['Score (%)']:.2f}%", help="How well your resume matches the job description.")
@@ -1831,12 +1832,22 @@ def candidate_screener_page():
                             st.warning("PDF generation failed, cannot provide download.")
                     
                     st.markdown("---")
-                    st.markdown("### Share Your Success!")
+                    st.subheader("Share Your Success!") # Replaced with native Streamlit subheader
+                    st.write("Did you make it to the top? Share your achievement!")
+                    
+                    # Share on X/Twitter using st.link_button
+                    x_share_text = urllib.parse.quote(
+                        f"I just scored {screening_result.get('Score (%)', 0):.2f}% on the ScreenerPro AI Resume Match! 🎉 Check out my certificate and try it yourself: {APP_BASE_URL} #ScreenerPro #ResumeMatch #JobSearch"
+                    )
+                    x_share_url = f"https://twitter.com/intent/tweet?text={x_share_text}"
+                    st.link_button("Share on X/Twitter", url=x_share_url, help="Share your score on X/Twitter")
+                    
+                    # LinkedIn share using st.link_button
                     linkedin_share_text = urllib.parse.quote(
                         f"I just scored {screening_result.get('Score (%)', 0):.2f}% on the ScreenerPro AI Resume Match! 🎉 Check out my certificate and try it yourself: {APP_BASE_URL} #ScreenerPro #ResumeMatch #JobSearch"
                     )
                     linkedin_share_url = f"https://www.linkedin.com/shareArticle?mini=true&url={urllib.parse.quote(APP_BASE_URL)}&title={urllib.parse.quote('ScreenerPro AI Match Certificate')}&summary={linkedin_share_text}"
-                    st.markdown(f'<a href="{linkedin_share_url}" target="_blank" class="link-button linkedin">Share on LinkedIn</a>', unsafe_allow_html=True)
+                    st.link_button("Share on LinkedIn", url=linkedin_share_url, help="Share your score on LinkedIn")
 
                 else:
                     st.info(f"Your score of {screening_result.get('Score (%)', 0):.2f}% does not meet the 80% threshold for a ScreenerPro Certificate at this time. Keep improving!")
@@ -1939,7 +1950,7 @@ if authenticated:
     if candidate_tab == "🏠 Home (Screener)":
         candidate_screener_page()
     elif candidate_tab == "⭐ Top Candidates":
-        st.markdown("<h2 class='centered-header'>⭐ Top Candidates This Week</h2>", unsafe_allow_html=True)
+        st.header("⭐ Top Candidates This Week", divider='rainbow') # Replaced with native Streamlit header
         
         # Add a logo at the top of the "Top Candidates" page
         st.image("https://placehold.co/150x50/00cec9/ffffff?text=ScreenerPro+Logo", caption="ScreenerPro", width=150, use_column_width=False, output_format="PNG", clamp=True, channels="RGB", format="PNG", class_name="screenerpro-logo")
@@ -1957,7 +1968,7 @@ if authenticated:
             
             # Add a graph for score distribution
             st.markdown("---")
-            st.subheader("Score Distribution Among Top Candidates")
+            st.subheader("Score Distribution Among Top Candidates") # Replaced with native Streamlit subheader
             if not top_candidates_df.empty:
                 fig = px.histogram(top_candidates_df, x="Score (%)", nbins=10,
                                    title="Distribution of Top Candidate Scores",
@@ -1975,34 +1986,34 @@ if authenticated:
 
 
             st.markdown("---")
-            st.markdown("### Share Your Success!")
+            st.subheader("Share Your Success!") # Replaced with native Streamlit subheader
             st.write("Did you make it to the top? Share your achievement!")
             
-            # Share on X/Twitter
+            # Share on X/Twitter using st.link_button
             x_share_text = urllib.parse.quote(
                 f"I just checked my resume match on ScreenerPro and it's awesome! Check out the top candidates here: {APP_BASE_URL} #ScreenerPro #JobSearch #ResumeTips"
             )
             x_share_url = f"https://twitter.com/intent/tweet?text={x_share_text}"
-            st.markdown(f'<a href="{x_share_url}" target="_blank" class="link-button twitter">Share on X/Twitter</a>', unsafe_allow_html=True)
+            st.link_button("Share on X/Twitter", url=x_share_url, help="Share this page on X/Twitter")
             
             # LinkedIn share (already defined in certificate, but can be generic here)
             linkedin_share_text_generic = urllib.parse.quote(
                 f"Check out the top candidates on ScreenerPro's AI Resume Match platform! Find your fit: {APP_BASE_URL} #ScreenerPro #ResumeMatch #JobSearch"
             )
             linkedin_share_url_generic = f"https://www.linkedin.com/shareArticle?mini=true&url={urllib.parse.quote(APP_BASE_URL)}&title={urllib.parse.quote('ScreenerPro Top Candidates')}&summary={linkedin_share_text_generic}"
-            st.markdown(f'<a href="{linkedin_share_url_generic}" target="_blank" class="link-button linkedin">Share on LinkedIn</a>', unsafe_allow_html=True)
+            st.link_button("Share on LinkedIn", url=linkedin_share_url_generic, help="Share this page on LinkedIn")
 
         else:
             st.info("No top candidates to display yet. Be the first to get a high score!")
 
         st.markdown("---")
-        st.subheader("For Recruiters and HR Professionals")
-        st.markdown("Are you an HR professional looking for advanced candidate screening tools?")
-        st.markdown(f'<a href="{HR_APP_URL}" target="_blank" class="link-button hr-app">Go to ScreenerPro for HR</a>', unsafe_allow_html=True)
+        st.subheader("For Recruiters and HR Professionals") # Replaced with native Streamlit subheader
+        st.write("Are you an HR professional looking for advanced candidate screening tools?")
+        st.link_button("Go to ScreenerPro for HR", url=HR_APP_URL, help="Navigate to the HR ScreenerPro application")
 
 
     elif candidate_tab == "🤝 Refer a Friend":
-        st.markdown("<h2 class='centered-header'>🤝 Refer a Friend</h2>", unsafe_allow_html=True)
+        st.header("🤝 Refer a Friend", divider='rainbow') # Replaced with native Streamlit header
         st.info("Help your friends find their perfect job match and get rewarded!")
         st.markdown("""
         Invite 3 friends to sign up and use ScreenerPro, and you'll unlock a **Premium Scan** feature!
@@ -2019,7 +2030,7 @@ if authenticated:
         st.button("Copy Referral Link", on_click=lambda: st.write("Copied! (functionality not active in sandbox)"))
         
         st.markdown("---")
-        st.subheader("Your Referral Status:")
+        st.subheader("Your Referral Status:") # Replaced with native Streamlit subheader
         st.info("You have referred **0** friends. Refer **3** to unlock your premium scan!") # Placeholder
 
 else:
