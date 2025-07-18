@@ -16,7 +16,7 @@ from sentence_transformers import SentenceTransformer # For embeddings
 import nltk # For stopwords
 from PIL import Image # For image processing (OCR)
 import pytesseract # For OCR
-import cv2 # For image processing (OCR)
+
 from pdf2image import convert_from_bytes # For PDF to image conversion
 from weasyprint import HTML # For PDF certificate generation
 import traceback # For detailed error logging
