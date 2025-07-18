@@ -23,9 +23,6 @@ import uuid # Import uuid for certificate IDs
 # CRITICAL: Disable Hugging Face tokenizers parallelism to avoid deadlocks
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
-# --- OCR Specific Imports (REMOVED) ---
-# Image, pytesseract, cv2, pdf2image imports are removed.
-
 # Global NLTK download check (should run once)
 try:
     nltk.data.find('corpora/stopwords')
@@ -286,8 +283,6 @@ def load_ml_model():
 # Load models globally (once per app run)
 global_sentence_model, global_ml_model = load_ml_model()
 
-
-# --- Removed preprocess_image_for_ocr as it's no longer needed ---
 
 def clean_text(text):
     text = re.sub(r'\n', ' ', text)
@@ -1563,51 +1558,65 @@ def load_jds_from_folder(folder_path):
 
 # --- Candidate Resume Screener Page ---
 def candidate_screener_page():
-    st.markdown("## 📄 Single Resume Screener for Candidates")
-    st.info("Upload your resume and paste a job description or select from available JDs to see how well you match!")
+    st.markdown("<h2 style='text-align: center; color: #00cec9;'>📄 AI Resume Matcher</h2>", unsafe_allow_html=True)
+    st.info("Upload your resume and select a job description (JD) or paste your own to see how well you match!")
 
     # Load available JDs
     available_jds = load_jds_from_folder(JD_FOLDER)
     jd_options = ["Paste Job Description"] + sorted(list(available_jds.keys()))
 
-    jd_selection_method = st.radio(
-        "How would you like to provide the Job Description?",
+    # Use st.selectbox for JD selection
+    jd_selection_method = st.selectbox(
+        "Choose how to provide the Job Description:",
         jd_options,
-        key="jd_selection_method"
+        key="jd_selection_method_dropdown"
     )
 
     jd_text = ""
     selected_jd_name = "User Provided JD Text" # Default for pasted JD
 
-    if jd_selection_method == "Paste Job Description":
-        jd_text = st.text_area(
-            "Paste the Job Description (JD) here:",
-            height=200,
-            placeholder="e.g., We are looking for a Software Engineer with Python and AWS experience...",
-            key="candidate_jd_input_paste"
-        )
-    elif jd_selection_method in available_jds:
-        selected_jd_name = jd_selection_method
-        jd_text = available_jds[jd_selection_method]
-        st.text_area(
-            f"Content of '{selected_jd_name}':",
-            value=jd_text,
-            height=200,
-            disabled=True, # Make it read-only
-            key="candidate_jd_input_selected"
-        )
-    else:
-        st.warning("No JDs found in the 'data' folder. Please add some .txt files or paste a JD.")
+    col1, col2 = st.columns([1, 1])
 
-    # File uploader for single resume
-    uploaded_resume = st.file_uploader(
-        "Upload Your Resume (PDF, DOCX, TXT)",
-        type=["pdf", "docx", "txt"],
-        accept_multiple_files=False,
-        key="candidate_resume_uploader"
-    )
+    with col1:
+        st.markdown("### 📝 Job Description")
+        if jd_selection_method == "Paste Job Description":
+            jd_text = st.text_area(
+                "Paste the Job Description (JD) here:",
+                height=300,
+                placeholder="e.g., We are looking for a Software Engineer with Python and AWS experience...",
+                key="candidate_jd_input_paste"
+            )
+        elif jd_selection_method in available_jds:
+            selected_jd_name = jd_selection_method
+            jd_text = available_jds[jd_selection_method]
+            with st.expander(f"View content of '{selected_jd_name}'"):
+                st.text_area(
+                    f"Content of '{selected_jd_name}':",
+                    value=jd_text,
+                    height=250,
+                    disabled=True, # Make it read-only
+                    key="candidate_jd_input_selected"
+                )
+        else:
+            st.warning("No JDs found in the 'data' folder. Please add some .txt files or paste a JD.")
+    
+    with col2:
+        st.markdown("### ⬆️ Upload Your Resume")
+        # File uploader for single resume
+        uploaded_resume = st.file_uploader(
+            "Upload your resume here (PDF, DOCX, TXT):",
+            type=["pdf", "docx", "txt"],
+            accept_multiple_files=False,
+            key="candidate_resume_uploader"
+        )
+        if uploaded_resume:
+            st.success(f"Resume '{uploaded_resume.name}' uploaded successfully!")
+        else:
+            st.info("Please upload your resume to proceed.")
 
-    if st.button("Analyze My Resume", key="analyze_candidate_resume_button"):
+    st.markdown("---")
+    st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
+    if st.button("🚀 Analyze My Resume", key="analyze_candidate_resume_button", help="Click to get your resume match score!"):
         if not jd_text:
             st.error("Please provide a Job Description (paste or select).")
         elif not uploaded_resume:
@@ -1651,8 +1660,9 @@ def candidate_screener_page():
                         st.session_state.candidate_username
                     )
 
+                st.markdown("</div>", unsafe_allow_html=True) # Close center div
 
-                st.markdown("### ✨ Your Resume Analysis Results:")
+                st.markdown("<h3 style='text-align: center; color: #00cec9;'>✨ Your Resume Analysis Results:</h3>", unsafe_allow_html=True)
 
                 col_score, col_exp, col_cgpa = st.columns(3)
                 col_score.metric("Your Match Score", f"{screening_result['Score (%)']:.2f}%", help="How well your resume matches the job description.")
@@ -1668,12 +1678,17 @@ def candidate_screener_page():
                 st.write(f"**Phone Number:** {screening_result.get('Phone Number', 'N/A')}")
                 st.write(f"**Location:** {screening_result.get('Location', 'N/A')}")
                 st.write(f"**Languages:** {screening_result.get('Languages', 'N/A')}")
-                st.write(f"**Matched Keywords:** {screening_result.get('Matched Keywords', 'None')}")
-                st.write(f"**Missing Skills:** {screening_result.get('Missing Skills', 'None')}")
-                st.write(f"**AI Suggestion:** {screening_result.get('AI Suggestion', 'No specific suggestions.')}")
                 st.write(f"**Semantic Similarity (JD vs. Resume):** {screening_result.get('Semantic Similarity', 'N/A'):.2f}")
                 st.write(f"**JD Used:** {screening_result.get('JD Used', 'N/A')}")
 
+                with st.expander("View Matched Keywords"):
+                    st.write(screening_result.get('Matched Keywords', 'None'))
+                with st.expander("View Missing Skills"):
+                    st.write(screening_result.get('Missing Skills', 'None'))
+                with st.expander("AI Suggestion"):
+                    st.write(screening_result.get('AI Suggestion', 'No specific suggestions.'))
+                with st.expander("Detailed HR Assessment"):
+                    st.write(screening_result.get('Detailed HR Assessment', 'No detailed assessment.'))
 
                 st.success("Analysis complete!")
 
@@ -1764,30 +1779,36 @@ def candidate_screener_page():
                 history_df['timestamp'] = pd.to_datetime(history_df['timestamp'], errors='coerce')
             history_df = history_df.sort_values(by='timestamp', ascending=False)
 
-            st.subheader("Your Screening History")
-            st.dataframe(history_df[['timestamp', 'JD Used', 'Score (%)', 'Years Experience', 'Matched Keywords']].rename(columns={'Score (%)': 'Score', 'Years Experience': 'Experience'}), use_container_width=True)
+            # Use tabs for dashboard sections
+            history_tab, score_dist_tab, skill_summary_tab = st.tabs(["Screening History", "Score Distribution", "Skill Summary"])
 
-            st.markdown("#### Your Score Distribution")
-            fig_hist = px.histogram(history_df, x='Score (%)', nbins=10, title='Distribution of Your Scores',
-                                    labels={'Score (%)': 'Match Score (%)'}, color_discrete_sequence=['#00cec9'])
-            st.plotly_chart(fig_hist, use_container_width=True)
-            
-            # Latest Score Metric
-            latest_score = history_df.iloc[0]['Score (%)']
-            st.metric("Latest Score", f"{latest_score:.2f}%")
+            with history_tab:
+                st.subheader("Your Screening History")
+                st.dataframe(history_df[['timestamp', 'JD Used', 'Score (%)', 'Years Experience', 'Matched Keywords']].rename(columns={'Score (%)': 'Score', 'Years Experience': 'Experience'}), use_container_width=True)
 
-            st.subheader("Key Skills from Latest Scan")
-            latest_matched_keywords = history_df.iloc[0].get('Matched Keywords', 'None')
-            if latest_matched_keywords and isinstance(latest_matched_keywords, str):
-                st.markdown(f"**Matched:** {latest_matched_keywords}")
-            else:
-                st.info("No matched keywords from your latest scan.")
+            with score_dist_tab:
+                st.markdown("#### Your Score Distribution")
+                fig_hist = px.histogram(history_df, x='Score (%)', nbins=10, title='Distribution of Your Scores',
+                                        labels={'Score (%)': 'Match Score (%)'}, color_discrete_sequence=['#00cec9'])
+                st.plotly_chart(fig_hist, use_container_width=True)
+                
+                # Latest Score Metric
+                latest_score = history_df.iloc[0]['Score (%)']
+                st.metric("Latest Score", f"{latest_score:.2f}%")
 
-            latest_missing_skills = history_df.iloc[0].get('Missing Skills', 'None')
-            if latest_missing_skills and isinstance(latest_missing_skills, str):
-                st.markdown(f"**Missing:** {latest_missing_skills}")
-            else:
-                st.info("No missing skills from your latest scan.")
+            with skill_summary_tab:
+                st.subheader("Key Skills from Latest Scan")
+                latest_matched_keywords = history_df.iloc[0].get('Matched Keywords', 'None')
+                if latest_matched_keywords and isinstance(latest_matched_keywords, str):
+                    st.markdown(f"**Matched:** {latest_matched_keywords}")
+                else:
+                    st.info("No matched keywords from your latest scan.")
+
+                latest_missing_skills = history_df.iloc[0].get('Missing Skills', 'None')
+                if latest_missing_skills and isinstance(latest_missing_skills, str):
+                    st.markdown(f"**Missing:** {latest_missing_skills}")
+                else:
+                    st.info("No missing skills from your latest scan.")
 
         else:
             st.info("No screening history found. Upload your resume to see your dashboard!")
@@ -1855,6 +1876,24 @@ h1, h2, h3, h4, h5, h6 {{
 .stTextInput > label {{
     color: {'#E0E0E0' if dark_mode else '#333333'};
 }}
+.stSelectbox > div > div > div > div {{
+    background-color: {'#3A3A3A' if dark_mode else '#f0f2f6'};
+    color: {'#E0E0E0' if dark_mode else '#333333'};
+    border-radius: 8px;
+}}
+.stSelectbox > label {{
+    color: {'#E0E0E0' if dark_mode else '#333333'};
+}}
+.stExpander {{
+    background-color: {'#3A3A3A' if dark_mode else '#f0f2f6'};
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,{'0.2' if dark_mode else '0.05'});
+}}
+.stExpander > div > div > p {{
+    color: {'#E0E0E0' if dark_mode else '#333333'};
+}}
 </style>
 """, unsafe_allow_html=True)
 
@@ -1878,7 +1917,7 @@ if authenticated:
     if candidate_tab == "🏠 Home (Screener)":
         candidate_screener_page()
     elif candidate_tab == "📊 My Dashboard":
-        st.markdown("## 📊 Your Personal Dashboard")
+        st.markdown("<h2 style='text-align: center; color: #00cec9;'>📊 Your Personal Dashboard</h2>", unsafe_allow_html=True)
         if st.session_state.get('candidate_username'):
             # Filter history for the current user
             all_history = load_candidate_screening_history_local()
@@ -1895,30 +1934,36 @@ if authenticated:
                     history_df['timestamp'] = pd.to_datetime(history_df['timestamp'], errors='coerce')
                 history_df = history_df.sort_values(by='timestamp', ascending=False)
 
-                st.subheader("Your Screening History")
-                st.dataframe(history_df[['timestamp', 'JD Used', 'Score (%)', 'Years Experience', 'Matched Keywords']].rename(columns={'Score (%)': 'Score', 'Years Experience': 'Experience'}), use_container_width=True)
+                # Use tabs for dashboard sections
+                history_tab, score_dist_tab, skill_summary_tab = st.tabs(["Screening History", "Score Distribution", "Skill Summary"])
 
-                st.markdown("#### Your Score Distribution")
-                fig_hist = px.histogram(history_df, x='Score (%)', nbins=10, title='Distribution of Your Scores',
-                                        labels={'Score (%)': 'Match Score (%)'}, color_discrete_sequence=['#00cec9'])
-                st.plotly_chart(fig_hist, use_container_width=True)
-                
-                # Latest Score Metric
-                latest_score = history_df.iloc[0]['Score (%)']
-                st.metric("Latest Score", f"{latest_score:.2f}%")
+                with history_tab:
+                    st.subheader("Your Screening History")
+                    st.dataframe(history_df[['timestamp', 'JD Used', 'Score (%)', 'Years Experience', 'Matched Keywords']].rename(columns={'Score (%)': 'Score', 'Years Experience': 'Experience'}), use_container_width=True)
 
-                st.subheader("Key Skills from Latest Scan")
-                latest_matched_keywords = history_df.iloc[0].get('Matched Keywords', 'None')
-                if latest_matched_keywords and isinstance(latest_matched_keywords, str):
-                    st.markdown(f"**Matched:** {latest_matched_keywords}")
-                else:
-                    st.info("No matched keywords from your latest scan.")
+                with score_dist_tab:
+                    st.markdown("#### Your Score Distribution")
+                    fig_hist = px.histogram(history_df, x='Score (%)', nbins=10, title='Distribution of Your Scores',
+                                            labels={'Score (%)': 'Match Score (%)'}, color_discrete_sequence=['#00cec9'])
+                    st.plotly_chart(fig_hist, use_container_width=True)
+                    
+                    # Latest Score Metric
+                    latest_score = history_df.iloc[0]['Score (%)']
+                    st.metric("Latest Score", f"{latest_score:.2f}%")
 
-                latest_missing_skills = history_df.iloc[0].get('Missing Skills', 'None')
-                if latest_missing_skills and isinstance(latest_missing_skills, str):
-                    st.markdown(f"**Missing:** {latest_missing_skills}")
-                else:
-                    st.info("No missing skills from your latest scan.")
+                with skill_summary_tab:
+                    st.subheader("Key Skills from Latest Scan")
+                    latest_matched_keywords = history_df.iloc[0].get('Matched Keywords', 'None')
+                    if latest_matched_keywords and isinstance(latest_matched_keywords, str):
+                        st.markdown(f"**Matched:** {latest_matched_keywords}")
+                    else:
+                        st.info("No matched keywords from your latest scan.")
+
+                    latest_missing_skills = history_df.iloc[0].get('Missing Skills', 'None')
+                    if latest_missing_skills and isinstance(latest_missing_skills, str):
+                        st.markdown(f"**Missing:** {latest_missing_skills}")
+                    else:
+                        st.info("No missing skills from your latest scan.")
 
             else:
                 st.info("No screening history found. Upload your resume to see your dashboard!")
@@ -1926,9 +1971,9 @@ if authenticated:
             st.warning("Please log in to view your dashboard.")
 
     elif candidate_tab == "⭐ Top Candidates":
-        st.markdown("## ⭐ Top Candidates This Week")
+        st.markdown("<h2 style='text-align: center; color: #00cec9;'>⭐ Top Candidates This Week</h2>", unsafe_allow_html=True)
         st.info("See who's acing their resume matches!")
-        top_candidates_data = load_top_candidates_local()
+        top_candidates_data = load_top_candidates_leaderboard_local() # Changed to load_top_candidates_leaderboard_local
         if top_candidates_data:
             top_candidates_df = pd.DataFrame(top_candidates_data)
             # Ensure numeric types
@@ -1959,7 +2004,7 @@ if authenticated:
             st.info("No top candidates to display yet. Be the first to get a high score!")
 
     elif candidate_tab == "🤝 Refer a Friend":
-        st.markdown("## 🤝 Refer a Friend")
+        st.markdown("<h2 style='text-align: center; color: #00cec9;'>🤝 Refer a Friend</h2>", unsafe_allow_html=True)
         st.info("Help your friends find their perfect job match and get rewarded!")
         st.markdown("""
         Invite 3 friends to sign up and use ScreenerPro, and you'll unlock a **Premium Scan** feature!
