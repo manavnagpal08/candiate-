@@ -1,19 +1,17 @@
-/* style.css */
-
 /* General Body Styling */
 body {
     font-family: 'Inter', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f0f2f6; /* Light background */
-    color: #333; /* Dark text for light mode */
+    background-color: #f0f2f6;
+    color: #333;
     transition: background-color 0.3s, color 0.3s;
 }
 
 /* Dark Mode Specific Styles */
 body.dark-mode {
-    background-color: #1e1e1e; /* Dark background */
-    color: #e0e0e0; /* Light text for dark mode */
+    background-color: #1e1e1e;
+    color: #e0e0e0;
 }
 
 body.dark-mode .stApp {
@@ -46,11 +44,11 @@ body.dark-mode .stSelectbox > div > div > div {
 }
 
 body.dark-mode .stSlider > div > div > div > div {
-    background-color: #00cec9; /* Accent color for slider fill */
+    background-color: #00cec9;
 }
 
 body.dark-mode .stProgress > div > div > div {
-    background-color: #00cec9; /* Accent color for progress bar */
+    background-color: #00cec9;
 }
 
 body.dark-mode .stAlert {
@@ -74,25 +72,25 @@ body.dark-mode .stDataFrame {
 
 /* Streamlit Specific Overrides (adjust as needed) */
 .stApp {
-    background-color: #f0f2f6; /* Light mode background */
+    background-color: #f0f2f6;
     transition: background-color 0.3s;
 }
 
 .stSidebar {
-    background-color: #ffffff; /* Light mode sidebar */
+    background-color: #ffffff;
     box-shadow: 2px 0 5px rgba(0,0,0,0.05);
     transition: background-color 0.3s;
 }
 
 /* Headers */
 h1, h2, h3, h4, h5, h6 {
-    color: #007bff; /* A nice blue for headers */
+    color: #007bff;
     font-weight: 600;
 }
 
 /* Buttons */
 .stButton > button {
-    background-color: #00cec9; /* Teal button */
+    background-color: #00cec9;
     color: white;
     border-radius: 8px;
     border: none;
@@ -104,7 +102,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .stButton > button:hover {
-    background-color: #00a8a3; /* Darker teal on hover */
+    background-color: #00a8a3;
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(0, 206, 201, 0.3);
 }
@@ -121,12 +119,12 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Sliders */
 .stSlider > div > div > div > div {
-    background-color: #00cec9; /* Teal for slider fill */
+    background-color: #00cec9;
 }
 
 /* Progress Bars */
 .stProgress > div > div > div {
-    background-color: #00cec9; /* Teal for progress bar */
+    background-color: #00cec9;
 }
 
 /* Expander */
@@ -177,12 +175,12 @@ a button:hover {
 }
 
 /* Adjustments for Streamlit's native headers with divider */
-.st-emotion-cache-10q7j1l { /* This class might change, but targets the header with divider */
-    color: #007bff; /* Consistent header color */
+.st-emotion-cache-10q7j1l {
+    color: #007bff;
 }
 
 /* Custom styles for the Streamlit status box (for email sending) */
-.st-emotion-cache-1c7y2kd { /* This class might change */
+.st-emotion-cache-1c7y2kd {
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
@@ -191,18 +189,18 @@ a button:hover {
 img {
     max-width: 100%;
     height: auto;
-    border-radius: 8px; /* Consistent rounded corners */
+    border-radius: 8px;
 }
 
 /* Dataframe styling */
 .stDataFrame {
     border-radius: 8px;
-    overflow: hidden; /* Ensures rounded corners apply to content */
+    overflow: hidden;
 }
 
 /* Scrollable sections if needed */
 .scrollable-content {
-    max-height: 400px; /* Example height */
+    max-height: 400px;
     overflow-y: auto;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
