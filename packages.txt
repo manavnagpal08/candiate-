@@ -8,3 +8,8 @@ libjpeg-dev
 zlib1g-dev
 tesseract-ocr
 tesseract-ocr-eng
+libgl1-mesa-glx
+libsm6
+libxext6
+libxrender1
+libfontconfig1
