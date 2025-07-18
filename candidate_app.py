@@ -257,9 +257,9 @@ SKILL_CATEGORIES = {
 MASTER_SKILLS = set([skill for category_list in SKILL_CATEGORIES.values() for skill in category_list])
 
 # IMPORTANT: REPLACE THESE WITH YOUR ACTUAL DEPLOYMENT URLs
-APP_BASE_URL = "https://your-screener-app.streamlit.app" # Placeholder
+APP_BASE_URL = "https://your-screener-app.streamlit.app" # Placeholder for candidate app
 CERTIFICATE_HOSTING_URL = "https://your-certificate-hosting-url.com/certificates" # Placeholder for certificate hosting
-
+HR_APP_URL = "https://your-hr-screener-app.streamlit.app" # Placeholder for HR app
 
 # Load ML models once using st.cache_resource
 @st.cache_resource
@@ -1705,7 +1705,7 @@ def candidate_screener_page():
 
     st.markdown("---")
     st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
-    if st.button("🚀 Analyze My Resume", key="analyze_candidate_resume_button", help="Click to get your resume match score!"):
+    if st.button("🚀 Analyze My Resume", key="analyze_candidate_resume_button", help="Click to get your resume match score! 👇"):
         if not jd_text:
             st.error("Please provide a Job Description (paste or select).")
         elif not uploaded_resume:
@@ -1963,6 +1963,10 @@ if authenticated:
         candidate_screener_page()
     elif candidate_tab == "⭐ Top Candidates":
         st.markdown("<h2 style='text-align: center; color: #00cec9;'>⭐ Top Candidates This Week</h2>", unsafe_allow_html=True)
+        
+        # Add a logo at the top of the "Top Candidates" page
+        st.image("https://placehold.co/150x50/00cec9/ffffff?text=ScreenerPro+Logo", caption="ScreenerPro", width=150)
+        
         st.info("See who's acing their resume matches!")
         top_candidates_data = load_top_candidates_leaderboard_local() # Changed to load_top_candidates_leaderboard_local
         if top_candidates_data:
@@ -1993,6 +1997,12 @@ if authenticated:
 
         else:
             st.info("No top candidates to display yet. Be the first to get a high score!")
+
+        st.markdown("---")
+        st.subheader("For Recruiters and HR Professionals")
+        st.markdown("Are you an HR professional looking for advanced candidate screening tools?")
+        st.markdown(f'<a href="{HR_APP_URL}" target="_blank" style="display: inline-block; padding: 10px 20px; background-color: #28a745; color: white; border-radius: 8px; text-decoration: none; font-weight: 600;">Go to ScreenerPro for HR</a>', unsafe_allow_html=True)
+
 
     elif candidate_tab == "🤝 Refer a Friend":
         st.markdown("<h2 style='text-align: center; color: #00cec9;'>🤝 Refer a Friend</h2>", unsafe_allow_html=True)
