@@ -1,0 +1,20 @@
+{
+  "Job Title": "Accounts Executive (Pharma) (Ref: 26)",
+  "Company": "Pharmaceutical Inc. 26",
+  "Job Summary": "A Pharmaceutical Distributor is looking for an Accounts Executive to manage financial transactions specific to pharmaceutical distribution.",
+  "Key Responsibilities": [
+    "Process sales invoices for pharmaceutical products and reconcile collections.",
+    "Manage accounts payable for pharma manufacturers and logistics partners.",
+    "Handle inventory accounting for pharmaceutical stock.",
+    "Assist with GST compliance for pharma sales and purchases.",
+    "Prepare daily/weekly cash and bank reports.",
+    "Support month-end closing activities."
+  ],
+  "Qualifications": [
+    "B.Com degree.",
+    "2-4 years of experience in accounting, preferably in pharmaceutical distribution.",
+    "Proficiency in Tally ERP 9.",
+    "Strong attention to detail and ability to handle high transaction volumes.",
+    "Good communication skills."
+  ]
+}

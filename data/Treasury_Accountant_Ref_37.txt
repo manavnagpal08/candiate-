@@ -1,0 +1,20 @@
+{
+  "Job Title": "Treasury Accountant (Ref: 37)",
+  "Company": "Global Industries 37",
+  "Job Summary": "Global Finance Solutions is hiring a Treasury Accountant to manage cash flow, banking relationships, and financial risk.",
+  "Key Responsibilities": [
+    "Monitor daily cash positions and prepare accurate cash flow forecasts.",
+    "Manage bank accounts, reconcile treasury transactions, and ensure liquidity.",
+    "Execute foreign exchange (FX) transactions and manage currency risk exposure.",
+    "Ensure compliance with treasury policies, procedures, and internal controls.",
+    "Assist with debt management activities, including loan drawdowns and repayments.",
+    "Prepare treasury reports for management and support investment activities."
+  ],
+  "Qualifications": [
+    "Bachelor's degree in Finance, Accounting, or Economics.",
+    "3-5 years of experience in treasury or corporate finance.",
+    "Strong understanding of financial markets, instruments, and cash management techniques.",
+    "Proficiency in treasury management systems (TMS) and advanced MS Excel.",
+    "Excellent analytical and communication skills."
+  ]
+}

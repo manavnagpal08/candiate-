@@ -1,0 +1,20 @@
+{
+  "Job Title": "Accounts Assistant (Logistics & Supply Chain) (Ref: 36)",
+  "Company": "E-commerce Capital 36",
+  "Job Summary": "An E-commerce Logistics company is hiring an Accounts Assistant to support financial operations specific to warehousing and last-mile delivery.",
+  "Key Responsibilities": [
+    "Process invoices for warehousing, transportation, and delivery services.",
+    "Reconcile cash on delivery (COD) collections with bank settlements.",
+    "Manage accounts payable for fleet maintenance and fuel expenses.",
+    "Assist with inventory accounting in warehouses.",
+    "Support GST compliance for logistics services.",
+    "Prepare daily/weekly operational expense reports."
+  ],
+  "Qualifications": [
+    "B.Com degree.",
+    "1-3 years of experience in accounting, preferably in logistics or e-commerce.",
+    "Proficiency in Tally or similar accounting software.",
+    "Strong attention to detail and ability to work in a fast-paced environment.",
+    "Basic understanding of logistics operations."
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "Job Title": "Accounts Executive (Services) (Ref: 5)",
+  "Company": "IT Industries 5",
+  "Job Summary": "An IT Consulting Firm is looking for an Accounts Executive to manage financial transactions specific to service-based revenue and expenses.",
+  "Key Responsibilities": [
+    "Process client invoices for consulting services and reconcile payments.",
+    "Manage accounts payable for vendor services and employee expenses.",
+    "Handle payroll data entry and processing for consultants.",
+    "Assist with GST compliance for service exports and domestic services.",
+    "Prepare monthly profitability reports by project/client.",
+    "Support month-end closing activities."
+  ],
+  "Qualifications": [
+    "B.Com degree.",
+    "2-4 years of experience in accounting, preferably in a services industry.",
+    "Proficiency in accounting software (e.g., Zoho Books, QuickBooks).",
+    "Strong attention to detail.",
+    "Good communication skills for client interaction."
+  ]
+}

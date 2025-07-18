@@ -1,0 +1,20 @@
+{
+  "Job Title": "Cost Accountant (Ref: 34)",
+  "Company": "Precision Manufacturing 34",
+  "Job Summary": "Looking for a Cost Accountant to analyze production costs, contribute to cost control initiatives, and support strategic pricing decisions.",
+  "Key Responsibilities": [
+    "Analyze manufacturing costs, including direct labor, direct materials, and manufacturing overhead.",
+    "Develop and maintain standard costing systems and procedures for products.",
+    "Prepare detailed cost reports, analyze cost variances, and provide insights on cost drivers.",
+    "Assist in inventory valuation, obsolescence analysis, and inventory control measures.",
+    "Support budgeting and forecasting processes related to production costs.",
+    "Collaborate with production and operations teams to identify cost reduction opportunities."
+  ],
+  "Qualifications": [
+    "Bachelor's degree in Accounting or Commerce; CMA (Certified Management Accountant) or M.Com preferred.",
+    "3-5 years of experience in cost accounting, preferably in a manufacturing environment.",
+    "Strong analytical skills, attention to detail, and ability to work with large datasets.",
+    "Proficiency in ERP systems (e.g., SAP CO module, Oracle Cost Management).",
+    "Knowledge of cost accounting principles and methodologies."
+  ]
+}

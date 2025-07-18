@@ -1,0 +1,20 @@
+{
+  "Job Title": "Accounts Payable Specialist (Ref: 22)",
+  "Company": "Logistics Inc. 22",
+  "Job Summary": "Hiring an Accounts Payable Specialist to manage vendor invoices and payments efficiently, ensuring accuracy and compliance.",
+  "Key Responsibilities": [
+    "Process high-volume vendor invoices, ensuring accurate coding, approvals, and adherence to company policies.",
+    "Reconcile vendor statements, investigate discrepancies, and resolve issues promptly.",
+    "Prepare and process electronic transfers (NEFT/RTGS) and checks for vendor payments.",
+    "Maintain accurate vendor records, including contact information and payment terms.",
+    "Communicate effectively with suppliers and internal departments regarding payment status.",
+    "Assist with month-end closing activities related to accounts payable accruals and reconciliations."
+  ],
+  "Qualifications": [
+    "Bachelor's degree in Accounting or Commerce.",
+    "2+ years of dedicated experience in Accounts Payable.",
+    "Proficiency in accounting software (e.g., QuickBooks, Tally, Zoho Books) and MS Excel.",
+    "Strong organizational skills, attention to detail, and ability to manage high transaction volumes.",
+    "Good verbal and written communication skills."
+  ]
+}

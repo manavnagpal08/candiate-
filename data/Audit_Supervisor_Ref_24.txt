@@ -1,0 +1,20 @@
+{
+  "Job Title": "Audit Supervisor (Ref: 24)",
+  "Company": "Reputable Capital 24",
+  "Job Summary": "A Reputable Audit Firm seeks an experienced Audit Supervisor to lead audit teams and manage client engagements effectively, ensuring high-quality audit deliverables.",
+  "Key Responsibilities": [
+    "Supervise and review audit engagements from planning to completion, ensuring adherence to standards.",
+    "Manage client relationships, engagement budgets, and timelines effectively.",
+    "Identify and resolve complex accounting and auditing issues, providing technical guidance.",
+    "Provide technical guidance, training, and mentorship to junior audit staff.",
+    "Prepare and present audit findings, recommendations, and management letters to clients and senior management.",
+    "Ensure compliance with Indian GAAP, IFRS, and Indian auditing standards (SA)."
+  ],
+  "Qualifications": [
+    "CA (Chartered Accountant) qualification with 6-8 years of experience in statutory audit, with at least 1-2 years in a supervisory role.",
+    "Strong knowledge of Indian GAAP, IFRS, and Indian auditing standards (SA).",
+    "Proven leadership, project management, and team-building skills.",
+    "Excellent communication (verbal and written) and interpersonal abilities.",
+    "Proficiency in audit software and advanced MS Excel."
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "Job Title": "Accounts Assistant (Ref: 23)",
+  "Company": "Retail Ventures 23",
+  "Job Summary": "Retail Chain X is looking for a diligent Accounts Assistant to support daily accounting operations in a dynamic retail environment.",
+  "Key Responsibilities": [
+    "Process daily sales and purchase entries accurately in the accounting system.",
+    "Reconcile daily cash and credit card transactions with bank statements.",
+    "Assist with inventory reconciliation and stock valuation processes.",
+    "Maintain petty cash records and manage expense reimbursements.",
+    "Support the finance manager with ad-hoc tasks, data entry, and report generation.",
+    "Ensure proper filing and archiving of financial documents."
+  ],
+  "Qualifications": [
+    "B.Com degree (freshers welcome or 0-1 year of experience).",
+    "Basic knowledge of accounting principles and practices.",
+    "Familiarity with Tally ERP 9 or similar accounting software.",
+    "Good data entry skills and attention to detail.",
+    "Ability to work effectively in a team environment."
+  ]
+}

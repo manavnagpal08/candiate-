@@ -1,0 +1,20 @@
+{
+  "Job Title": "Accounts Executive (Retail) (Ref: 20)",
+  "Company": "Fashion Partners 20",
+  "Job Summary": "A Fashion Retail Brand is hiring an Accounts Executive to manage financial operations specific to retail stores and online sales.",
+  "Key Responsibilities": [
+    "Process daily sales data from POS systems and reconcile with bank deposits.",
+    "Manage accounts payable for store expenses and vendor invoices.",
+    "Handle inventory accounting and reconciliation for retail stock.",
+    "Assist with GST compliance for retail sales.",
+    "Prepare daily/weekly cash flow reports for retail operations.",
+    "Support month-end closing activities related to retail accounts."
+  ],
+  "Qualifications": [
+    "B.Com degree.",
+    "2-4 years of experience in accounting, preferably in the retail sector.",
+    "Proficiency in Tally or retail accounting software.",
+    "Strong attention to detail and ability to handle high transaction volumes.",
+    "Good communication skills."
+  ]
+}

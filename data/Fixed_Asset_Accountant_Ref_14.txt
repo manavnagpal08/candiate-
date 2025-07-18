@@ -1,0 +1,20 @@
+{
+  "Job Title": "Fixed Asset Accountant (Ref: 14)",
+  "Company": "InfraBuild Manufacturing 14",
+  "Job Summary": "InfraBuild India seeks a Fixed Asset Accountant to manage the company's fixed asset register, ensuring accurate accounting and compliance.",
+  "Key Responsibilities": [
+    "Maintain accurate fixed asset records, including additions, disposals, transfers, and impairments.",
+    "Calculate and record depreciation and amortization expenses in accordance with company policy and accounting standards.",
+    "Perform periodic physical verification of assets and reconcile findings with ledger records.",
+    "Reconcile fixed asset sub-ledger to the general ledger on a monthly basis.",
+    "Assist with capital expenditure budgeting, forecasting, and reporting.",
+    "Ensure compliance with relevant accounting standards (e.g., Ind AS 10/IAS 16) for fixed assets."
+  ],
+  "Qualifications": [
+    "Bachelor's degree in Accounting or Commerce.",
+    "2-4 years of experience in fixed asset accounting.",
+    "Proficiency in ERP systems (e.g., SAP Fixed Assets module, Oracle Assets).",
+    "Strong attention to detail, accuracy, and reconciliation skills.",
+    "Good understanding of depreciation methods and fixed asset lifecycle."
+  ]
+}

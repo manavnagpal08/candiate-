@@ -1,0 +1,20 @@
+{
+  "Job Title": "General Ledger Accountant (Ref: 46)",
+  "Company": "PharmaCare Holdings 46",
+  "Job Summary": "PharmaCare Solutions is hiring a General Ledger Accountant to maintain the integrity of our financial records and support accurate reporting.",
+  "Key Responsibilities": [
+    "Manage all aspects of the general ledger, ensuring accurate and timely recording of transactions.",
+    "Prepare and post complex journal entries, including accruals, prepayments, and intercompany entries.",
+    "Perform detailed account reconciliations for various balance sheet and profit & loss accounts.",
+    "Assist with month-end and year-end closing processes, ensuring deadlines are met.",
+    "Ensure compliance with internal controls, accounting policies, and GAAP/IFRS.",
+    "Support financial statement preparation and provide analysis as required."
+  ],
+  "Qualifications": [
+    "Bachelor's degree in Accounting.",
+    "3-5 years of experience in general ledger accounting.",
+    "Strong knowledge of GAAP/IFRS and financial reporting principles.",
+    "Proficiency in large ERP systems (e.g., Oracle, SAP) and advanced MS Excel.",
+    "Excellent analytical and problem-solving skills."
+  ]
+}

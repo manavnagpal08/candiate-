@@ -1,0 +1,21 @@
+{
+  "Job Title": "Accounts Assistant (Part-time) (Ref: 39)",
+  "Company": "Local Logistics 39",
+  "Job Summary": "A Local Consultancy Firm is looking for a part-time Accounts Assistant to help with daily bookkeeping and administrative tasks, offering flexible hours.",
+  "Key Responsibilities": [
+    "Record daily financial transactions, including sales, purchases, and expenses.",
+    "Assist with invoice processing and expense tracking.",
+    "Perform regular bank reconciliations.",
+    "Organize and file financial documents neatly and systematically.",
+    "Support general office administration, including answering calls and managing correspondence.",
+    "Assist with basic data entry and report generation as needed."
+  ],
+  "Qualifications": [
+    "B.Com student or recent graduate.",
+    "Basic knowledge of accounting principles.",
+    "Familiarity with Tally or QuickBooks is an advantage.",
+    "Reliable, organized, and able to work independently.",
+    "Good communication and interpersonal skills.",
+    "Availability for part-time hours (e.g., 20-25 hours/week)."
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "Job Title": "Accounts Assistant (Education & Training) (Ref: 47)",
+  "Company": "Vocational Group 47",
+  "Job Summary": "A Vocational Training Institute is hiring an Accounts Assistant to support financial operations related to student fees and training programs.",
+  "Key Responsibilities": [
+    "Process student fee collections and reconcile student accounts.",
+    "Manage vendor payments for training materials and facilities.",
+    "Handle payroll data entry for trainers and administrative staff.",
+    "Assist with GST compliance for training services.",
+    "Maintain accurate financial records for various training programs.",
+    "Support month-end closing activities."
+  ],
+  "Qualifications": [
+    "B.Com degree.",
+    "1-2 years of experience in accounting, preferably in the education/training sector.",
+    "Proficiency in Tally or similar accounting software.",
+    "Strong attention to detail and good organizational skills.",
+    "Good communication skills."
+  ]
+}

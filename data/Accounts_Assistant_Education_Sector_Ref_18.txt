@@ -1,0 +1,20 @@
+{
+  "Job Title": "Accounts Assistant (Education Sector) (Ref: 18)",
+  "Company": "University Manufacturing 18",
+  "Job Summary": "A University Administration seeks an Accounts Assistant to handle financial transactions specific to an educational institution, ensuring accurate record-keeping.",
+  "Key Responsibilities": [
+    "Process student fee collections, reconcile student accounts, and manage refunds.",
+    "Manage vendor payments for educational supplies, services, and infrastructure projects.",
+    "Assist with payroll processing for faculty, staff, and temporary employees.",
+    "Maintain grant and project-specific financial records and ensure compliance with donor requirements.",
+    "Support internal audit of university funds and provide necessary documentation.",
+    "Prepare basic financial reports for departmental use."
+  ],
+  "Qualifications": [
+    "B.Com degree.",
+    "1-3 years of experience in accounting, preferably in the education sector (school, college, university).",
+    "Proficiency in Tally or similar accounting software used in educational institutions.",
+    "Good organizational skills and attention to detail.",
+    "Ability to handle sensitive financial information confidentially."
+  ]
+}

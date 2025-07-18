@@ -1,0 +1,20 @@
+{
+  "Job Title": "Internal Auditor (Ref: 44)",
+  "Company": "Corporate Group 44",
+  "Job Summary": "Seeking an Internal Auditor to evaluate and improve the effectiveness of risk management, control, and governance processes across the organization.",
+  "Key Responsibilities": [
+    "Conduct comprehensive operational, financial, and compliance audits.",
+    "Assess the design and operating effectiveness of internal controls, identifying deficiencies and recommending improvements.",
+    "Prepare detailed audit reports, clearly articulating findings, risks, and actionable recommendations.",
+    "Follow up on audit findings to ensure timely and effective remediation by management.",
+    "Collaborate effectively with various departments to understand processes and gather audit evidence.",
+    "Contribute to the annual audit planning and risk assessment process."
+  ],
+  "Qualifications": [
+    "Bachelor's degree in Accounting, Finance, or related field; CA/CPA/CIA (Certified Internal Auditor) preferred.",
+    "3-5 years of experience in internal audit or statutory audit.",
+    "Strong understanding of auditing standards (e.g., SA, ISA) and internal control frameworks (e.g., COSO).",
+    "Excellent analytical, critical thinking, and investigative skills.",
+    "Superior verbal and written communication skills for report writing and stakeholder engagement."
+  ]
+}

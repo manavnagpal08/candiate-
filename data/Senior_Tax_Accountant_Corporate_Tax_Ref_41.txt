@@ -1,0 +1,20 @@
+{
+  "Job Title": "Senior Tax Accountant (Corporate Tax) (Ref: 41)",
+  "Company": "Automotive Ventures 41",
+  "Job Summary": "An Automotive Sector company is hiring a Senior Tax Accountant to manage corporate income tax compliance and planning.",
+  "Key Responsibilities": [
+    "Prepare and review corporate income tax returns (ITR) and tax audit reports.",
+    "Manage tax assessments, appeals, and litigation related to corporate tax.",
+    "Conduct tax research on complex corporate tax matters and provide advisory.",
+    "Prepare tax provisions and deferred tax calculations for financial statements.",
+    "Ensure compliance with all corporate tax laws and regulations (Income Tax Act).",
+    "Collaborate with finance and legal teams on tax implications of business decisions."
+  ],
+  "Qualifications": [
+    "CA (Chartered Accountant) qualification is mandatory.",
+    "5-8 years of experience in corporate taxation, preferably in the automotive sector or a large corporate.",
+    "In-depth knowledge of Indian Income Tax Act and corporate tax principles.",
+    "Proficiency in tax software and advanced MS Excel.",
+    "Strong analytical and problem-solving skills."
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "Job Title": "Accounts Officer (Ref: 7)",
+  "Company": "Government Ventures 7",
+  "Job Summary": "A Government Sector Unit is seeking a dedicated Accounts Officer to manage financial records and ensure strict compliance with government accounting standards and regulations.",
+  "Key Responsibilities": [
+    "Maintain general ledger and prepare trial balances in accordance with government accounting rules.",
+    "Process bills, vouchers, and manage payroll for government employees.",
+    "Prepare budget estimates, monitor expenditures, and ensure adherence to budgetary allocations.",
+    "Ensure strict compliance with General Financial Rules (GFR) and other government accounting guidelines.",
+    "Assist with internal and external audits conducted by government audit bodies.",
+    "Prepare various financial statements and reports as required by government authorities."
+  ],
+  "Qualifications": [
+    "B.Com/M.Com degree.",
+    "3-5 years of experience in government accounting or public sector finance.",
+    "In-depth knowledge of GFR (General Financial Rules) and government accounting principles is mandatory.",
+    "Proficiency in government accounting software or ERP systems.",
+    "Strong attention to detail and adherence to compliance."
+  ]
+}

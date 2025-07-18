@@ -1,0 +1,20 @@
+{
+  "Job Title": "Accounting Software Trainer (Ref: 6)",
+  "Company": "Software Holdings 6",
+  "Job Summary": "A Software Solutions Provider is hiring an Accounting Software Trainer to train clients on using our accounting software solutions, ensuring effective adoption.",
+  "Key Responsibilities": [
+    "Conduct engaging training sessions for clients on various accounting software solutions (e.g., Tally, QuickBooks, SAP Business One).",
+    "Develop comprehensive training materials, user manuals, and online tutorials.",
+    "Provide post-training support and troubleshoot software-related issues for clients.",
+    "Understand client-specific accounting processes and tailor training accordingly.",
+    "Stay updated on new software features, accounting best practices, and industry trends.",
+    "Gather feedback from clients to improve training programs and software usability."
+  ],
+  "Qualifications": [
+    "B.Com/M.Com degree.",
+    "3-5 years of hands-on experience in accounting with strong proficiency in multiple accounting software.",
+    "Excellent presentation, verbal, and written communication skills.",
+    "Patience, empathy, and ability to explain complex concepts simply.",
+    "Prior experience in training or customer support is a plus."
+  ]
+}

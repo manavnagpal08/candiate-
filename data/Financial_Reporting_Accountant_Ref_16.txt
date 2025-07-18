@@ -1,0 +1,20 @@
+{
+  "Job Title": "Financial Reporting Accountant (Ref: 16)",
+  "Company": "Publicly Pvt. Ltd. 16",
+  "Job Summary": "A Publicly Listed Company seeks a Financial Reporting Accountant to prepare and analyze financial statements for external reporting and ensure compliance with accounting standards.",
+  "Key Responsibilities": [
+    "Prepare consolidated financial statements (quarterly and annual) in accordance with Ind AS/IFRS.",
+    "Ensure accurate and comprehensive disclosures and notes to financial statements.",
+    "Coordinate effectively with internal and external auditors during financial statement audits.",
+    "Research and implement new accounting standards and regulatory pronouncements.",
+    "Assist in the preparation of Board reports and investor presentations.",
+    "Drive process improvements in financial reporting and consolidation."
+  ],
+  "Qualifications": [
+    "CA/CPA or M.Com with 5-7 years of experience in financial reporting, preferably in a publicly listed company.",
+    "Strong knowledge of Ind AS/IFRS and financial consolidation principles.",
+    "Experience with ERP systems and financial consolidation tools (e.g., Hyperion HFM, SAP BPC).",
+    "Excellent written communication skills for disclosures and reports.",
+    "Strong analytical and problem-solving abilities."
+  ]
+}

@@ -1,0 +1,36 @@
+Job Title: Electrical Systems Engineer
+
+About Us:
+We are a leading company in electronics and embedded systems looking for passionate and skilled individuals to join our team. We value innovation, collaboration, and continuous learning, striving to design cutting-edge electrical systems for our products.
+
+The Role:
+As a Electrical Systems Engineer, you will be responsible for designing and testing electrical circuits and systems, developing embedded firmware and software, and troubleshooting electrical hardware issues. You will work closely with electrical engineering team to deliver reliable and high-performance electrical solutions. This role requires a strong commitment to reliability and innovation.
+
+Key Responsibilities:
+- Design, simulate, and test analog and digital electronic circuits and systems.
+- Develop and debug embedded firmware in C/C++ for microcontrollers.
+- Conduct hardware bring-up, validation, and root cause analysis of electrical issues.
+- Collaborate effectively with cross-functional teams (e.g., engineering, product, marketing).
+- Ensure high quality, adherence to best practices, and timely delivery of projects/tasks.
+- Continuously learn and stay updated with industry trends, emerging technologies, and relevant regulations.
+
+Required Skills and Qualifications:
+- Bachelor's or Master's degree in Electrical Engineering, Electronics Engineering, or Computer Engineering or equivalent practical experience.
+- 3+ years of proven professional experience in Electrical Systems Engineer or a closely related role.
+- Strong proficiency in Circuit Design, PCB Design (Altium, Eagle), Embedded Systems.
+- Demonstrated experience with C/C++ Programming, Microcontrollers (e.g., ARM, PIC), Analog/Digital Electronics.
+- Excellent analytical, problem-solving, and critical thinking skills.
+- Superior communication (written and verbal) and interpersonal abilities.
+
+Preferred Qualifications:
+- Experience with FPGA Design (VHDL/Verilog), Signal Processing, Power Electronics, LabVIEW.
+- Relevant industry certifications (e.g., PMP, AWS, CFA, SHRM).
+- Ability to thrive in a fast-paced, dynamic, and evolving environment.
+- A strong portfolio or demonstrable projects (where applicable).
+
+Benefits:
+- Competitive salary and comprehensive benefits package (health, dental, vision).
+- Generous paid time off and flexible work arrangements.
+- Opportunities for continuous professional growth, training, and career development.
+- A collaborative, inclusive, and supportive work environment.
+- contributing to the core technology that powers our products.

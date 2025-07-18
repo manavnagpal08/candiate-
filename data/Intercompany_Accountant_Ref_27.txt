@@ -1,0 +1,20 @@
+{
+  "Job Title": "Intercompany Accountant (Ref: 27)",
+  "Company": "Global Logistics 27",
+  "Job Summary": "A Global Shared Service Center is hiring an Intercompany Accountant to manage complex intercompany transactions and reconciliations for multinational entities.",
+  "Key Responsibilities": [
+    "Process and reconcile intercompany transactions across various global entities.",
+    "Ensure proper elimination of intercompany balances during financial consolidation.",
+    "Investigate and resolve intercompany discrepancies and out-of-balance situations promptly.",
+    "Maintain accurate intercompany agreements and supporting documentation.",
+    "Support month-end and quarter-end close activities related to intercompany accounts.",
+    "Collaborate with finance teams in different regions to ensure consistent intercompany accounting."
+  ],
+  "Qualifications": [
+    "Bachelor's degree in Accounting or Commerce.",
+    "3-5 years of experience in intercompany accounting or general ledger.",
+    "Proficiency in large ERP systems (e.g., SAP, Oracle) and strong Excel skills.",
+    "Strong analytical skills, meticulous attention to detail, and problem-solving abilities.",
+    "Good communication skills for cross-functional and cross-border collaboration."
+  ]
+}

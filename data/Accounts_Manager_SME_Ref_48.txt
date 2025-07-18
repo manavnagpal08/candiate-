@@ -1,0 +1,20 @@
+{
+  "Job Title": "Accounts Manager (SME) (Ref: 48)",
+  "Company": "Manufacturing Innovations 48",
+  "Job Summary": "A Manufacturing SME is looking for a seasoned Accounts Manager to independently handle all accounting and finance functions, ensuring financial health and compliance.",
+  "Key Responsibilities": [
+    "Manage full-cycle accounting, including General Ledger, Accounts Payable, Accounts Receivable, Payroll, and Fixed Assets.",
+    "Prepare accurate and timely financial statements (P&L, Balance Sheet, Cash Flow) and management reports.",
+    "Ensure strict compliance with GST, TDS, Income Tax, and other statutory requirements.",
+    "Liaise effectively with banks, auditors, tax authorities, and other external stakeholders.",
+    "Manage cash flow, working capital, and contribute to financial planning for the company.",
+    "Implement and maintain robust internal controls and accounting policies."
+  ],
+  "Qualifications": [
+    "B.Com/M.Com with 7-10 years of progressive experience in a standalone accounting role for an SME.",
+    "Proficiency in Tally ERP 9 and advanced MS Excel skills.",
+    "Strong knowledge of Indian accounting standards and comprehensive understanding of taxation.",
+    "Ability to work independently, manage multiple tasks, and take ownership of the finance function.",
+    "Good leadership and problem-solving abilities."
+  ]
+}

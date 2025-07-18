@@ -1,0 +1,20 @@
+{
+  "Job Title": "Accounts & Admin Executive (Ref: 11)",
+  "Company": "SME Enterprises 11",
+  "Job Summary": "SME Solutions is looking for a versatile Accounts & Admin Executive to handle both accounting and administrative tasks, supporting overall office operations.",
+  "Key Responsibilities": [
+    "Manage daily accounting entries, including cash and bank transactions.",
+    "Handle accounts payable and accounts receivable processes.",
+    "Assist with general office administration, including vendor management, procurement of supplies, and facility maintenance.",
+    "Prepare basic financial reports and summaries for management.",
+    "Support HR-related documentation and record-keeping.",
+    "Ensure smooth day-to-day operations of the office."
+  ],
+  "Qualifications": [
+    "B.Com degree.",
+    "1-3 years of experience in a combined accounting and administrative role.",
+    "Proficiency in Tally or similar accounting software.",
+    "Good organizational, multitasking, and interpersonal abilities.",
+    "Ability to work independently and manage priorities effectively."
+  ]
+}

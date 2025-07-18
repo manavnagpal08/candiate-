@@ -1,0 +1,20 @@
+{
+  "Job Title": "Senior Accounts Executive (Services Export) (Ref: 50)",
+  "Company": "IT Industries 50",
+  "Job Summary": "An IT Services Export Company seeks a Senior Accounts Executive to manage financial operations specific to international service exports.",
+  "Key Responsibilities": [
+    "Process international client invoices for IT services and reconcile foreign currency receipts.",
+    "Manage accounts payable for international vendors and travel expenses.",
+    "Handle foreign exchange transactions and revaluations.",
+    "Assist with GST compliance for service exports (LUT, SEZ).",
+    "Prepare profitability reports by client/project for international services.",
+    "Support month-end closing activities related to export revenue."
+  ],
+  "Qualifications": [
+    "B.Com/M.Com degree.",
+    "4-6 years of experience in accounting, preferably in IT services export.",
+    "Knowledge of FEMA and international taxation basics.",
+    "Proficiency in ERP systems and advanced MS Excel.",
+    "Strong attention to detail and communication skills."
+  ]
+}

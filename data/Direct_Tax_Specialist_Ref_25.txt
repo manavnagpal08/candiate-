@@ -1,0 +1,21 @@
+{
+  "Job Title": "Direct Tax Specialist (Ref: 25)",
+  "Company": "Corporate Corp 25",
+  "Job Summary": "Corporate Tax Advisory seeks a highly experienced Direct Tax Specialist to provide expert advice and comprehensive compliance services for corporate income tax.",
+  "Key Responsibilities": [
+    "Manage corporate income tax assessments, appeals, and litigation matters.",
+    "Provide advisory on complex direct tax matters, including international tax, transfer pricing, and M&A tax implications.",
+    "Conduct thorough tax due diligence for business transactions.",
+    "Represent clients effectively before tax authorities during assessments and audits.",
+    "Keep abreast of changes in direct tax laws and regulations and advise clients accordingly.",
+    "Develop and implement strategic direct tax planning initiatives."
+  ],
+  "Qualifications": [
+    "CA (Chartered Accountant) qualification is mandatory.",
+    "6-10 years of experience in direct taxation, preferably in a consulting firm.",
+    "Deep expertise in corporate tax, DTAA (Double Taxation Avoidance Agreements), and transfer pricing.",
+    "Strong analytical, research, and problem-solving skills.",
+    "Excellent communication, negotiation, and client relationship management abilities.",
+    "Proven track record of handling complex tax matters."
+  ]
+}

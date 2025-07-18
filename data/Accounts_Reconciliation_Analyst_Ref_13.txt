@@ -1,0 +1,20 @@
+{
+  "Job Title": "Accounts Reconciliation Analyst (Ref: 13)",
+  "Company": "Fintech Pvt. Ltd. 13",
+  "Job Summary": "A Fintech Startup is looking for a meticulous Accounts Reconciliation Analyst to manage high-volume transaction reconciliations, ensuring data integrity and operational efficiency.",
+  "Key Responsibilities": [
+    "Perform daily/weekly reconciliation of bank statements, payment gateways, and various merchant accounts.",
+    "Identify, investigate, and resolve discrepancies in large datasets promptly and accurately.",
+    "Work closely with operations, tech, and customer support teams to resolve complex reconciliation issues.",
+    "Identify opportunities for process automation and efficiency improvements in reconciliation activities.",
+    "Prepare detailed reconciliation reports and dashboards for management.",
+    "Ensure compliance with internal policies and regulatory requirements related to reconciliations."
+  ],
+  "Qualifications": [
+    "Bachelor's degree in Commerce/Accounting.",
+    "2-4 years of experience in high-volume reconciliation, preferably in fintech or e-commerce.",
+    "Advanced MS Excel skills (complex formulas, macros, power query); knowledge of SQL or Python for data analysis a plus.",
+    "Strong problem-solving, analytical, and critical thinking abilities.",
+    "Ability to work in a fast-paced, dynamic environment."
+  ]
+}

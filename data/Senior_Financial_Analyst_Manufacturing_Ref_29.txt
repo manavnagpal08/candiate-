@@ -1,0 +1,20 @@
+{
+  "Job Title": "Senior Financial Analyst (Manufacturing) (Ref: 29)",
+  "Company": "Heavy Holdings 29",
+  "Job Summary": "A Heavy Engineering Industry company seeks a Senior Financial Analyst to provide in-depth financial analysis and support strategic decisions in manufacturing operations.",
+  "Key Responsibilities": [
+    "Conduct detailed financial analysis of manufacturing costs, production variances, and profitability.",
+    "Develop and maintain financial models for capital expenditure projects and new product initiatives.",
+    "Lead budgeting and forecasting processes for manufacturing units.",
+    "Prepare comprehensive financial reports and presentations for plant management.",
+    "Identify cost reduction opportunities and efficiency improvements in production.",
+    "Collaborate with operations, engineering, and sales teams on financial matters."
+  ],
+  "Qualifications": [
+    "MBA (Finance) or CA/CMA with 5-7 years of experience in financial analysis, preferably in heavy manufacturing.",
+    "Strong knowledge of cost accounting and financial modeling.",
+    "Expertise in ERP systems (e.g., SAP FICO, Oracle) and advanced MS Excel.",
+    "Excellent analytical, communication, and presentation skills.",
+    "Ability to work in a complex industrial environment."
+  ]
+}

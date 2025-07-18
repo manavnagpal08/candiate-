@@ -1,0 +1,20 @@
+{
+  "Job Title": "Financial Accountant (US GAAP) (Ref: 45)",
+  "Company": "US Logistics 45",
+  "Job Summary": "A US MNC is hiring a Financial Accountant to ensure financial reporting compliance with US GAAP for its Indian operations.",
+  "Key Responsibilities": [
+    "Prepare financial statements and reports in accordance with US GAAP.",
+    "Perform complex account reconciliations and in-depth analysis for various accounts.",
+    "Assist with month-end and quarter-end close processes, ensuring timely submission to HQ.",
+    "Ensure strict compliance with SOX (Sarbanes-Oxley Act) controls and documentation.",
+    "Liaise effectively with the US finance team and external auditors.",
+    "Research and apply technical accounting guidance related to US GAAP."
+  ],
+  "Qualifications": [
+    "B.Com/M.Com with 3-5 years of experience in US GAAP reporting.",
+    "Strong knowledge of US GAAP principles and their application.",
+    "Proficiency in large ERP systems (e.g., Oracle, SAP) and advanced MS Excel.",
+    "Excellent analytical and communication skills.",
+    "Ability to work in a multinational environment."
+  ]
+}

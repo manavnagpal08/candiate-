@@ -1,0 +1,20 @@
+{
+  "Job Title": "Accounts Executive (Healthcare) (Ref: 2)",
+  "Company": "Diagnostic Services 2",
+  "Job Summary": "A Diagnostic Chain is looking for an Accounts Executive to manage financial transactions specific to diagnostic services and patient billing.",
+  "Key Responsibilities": [
+    "Process daily patient collections and reconcile with diagnostic tests performed.",
+    "Manage accounts payable for medical supplies, lab equipment, and utilities.",
+    "Handle insurance claims processing and reconciliation.",
+    "Assist with payroll data entry for lab technicians and staff.",
+    "Prepare daily/weekly revenue reports for diagnostic centers.",
+    "Support month-end closing activities."
+  ],
+  "Qualifications": [
+    "B.Com degree.",
+    "2-4 years of experience in accounting, preferably in the healthcare or diagnostic sector.",
+    "Proficiency in accounting software (e.g., Tally, specific healthcare ERP).",
+    "Strong attention to detail and confidentiality.",
+    "Good communication skills."
+  ]
+}

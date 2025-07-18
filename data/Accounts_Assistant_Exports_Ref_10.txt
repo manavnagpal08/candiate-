@@ -1,0 +1,20 @@
+{
+  "Job Title": "Accounts Assistant (Exports) (Ref: 10)",
+  "Company": "Export-Import Agency 10",
+  "Job Summary": "An Export-Import House is hiring an Accounts Assistant to handle accounting specific to export and import transactions, ensuring compliance with international trade regulations.",
+  "Key Responsibilities": [
+    "Process export/import invoices and related documentation (e.g., shipping bills, BRCs, customs documents).",
+    "Manage foreign currency transactions, including revaluations and exchange rate differences.",
+    "Reconcile export incentives, duties, and drawback claims.",
+    "Assist with GST compliance for export/import transactions.",
+    "Liaise with banks, customs agents, and freight forwarders for smooth operations.",
+    "Maintain accurate records of all international trade transactions."
+  ],
+  "Qualifications": [
+    "B.Com degree.",
+    "1-3 years of experience in export/import accounting.",
+    "Knowledge of FEMA (Foreign Exchange Management Act) and customs regulations.",
+    "Proficiency in Tally ERP 9 and MS Excel.",
+    "Attention to detail and good organizational skills."
+  ]
+}

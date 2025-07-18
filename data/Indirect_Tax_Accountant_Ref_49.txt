@@ -1,0 +1,20 @@
+{
+  "Job Title": "Indirect Tax Accountant (Ref: 49)",
+  "Company": "Consumer Holdings 49",
+  "Job Summary": "A Consumer Goods Company is hiring an Indirect Tax Accountant to manage GST and other indirect tax compliances, ensuring seamless operations.",
+  "Key Responsibilities": [
+    "Ensure accurate and timely preparation and filing of all GST returns (GSTR-1, GSTR-3B, GSTR-9, etc.).",
+    "Manage reconciliation of GSTR-2A/2B with purchase register and resolve input tax credit discrepancies.",
+    "Handle GST audits, assessments, and respond to notices from tax authorities.",
+    "Provide advisory on GST implications for various business transactions and new product launches.",
+    "Keep updated with GST law changes, circulars, and notifications, and communicate impacts to relevant teams.",
+    "Ensure compliance with e-invoicing and e-way bill requirements."
+  ],
+  "Qualifications": [
+    "B.Com/M.Com or semi-qualified CA/CMA.",
+    "3-5 years of experience in indirect taxation, specifically GST, preferably in the FMCG sector.",
+    "Proficiency in GST software and ERP systems (e.g., SAP GST module).",
+    "Strong knowledge of GST laws and procedures.",
+    "Excellent analytical and problem-solving skills."
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "Job Title": "Senior Revenue Accountant (Ref: 30)",
+  "Company": "EdTech Innovations 30",
+  "Job Summary": "An EdTech Company seeks a Senior Revenue Accountant to manage complex revenue recognition and reporting for its subscription-based and course-based models.",
+  "Key Responsibilities": [
+    "Lead the revenue recognition process in accordance with Ind AS 115/IFRS 15, ensuring accurate application.",
+    "Prepare detailed revenue schedules, deferred revenue, and unbilled revenue reconciliations.",
+    "Analyze complex customer contracts and agreements for revenue recognition implications and provide guidance.",
+    "Assist with month-end and quarter-end close activities specifically related to revenue accounts.",
+    "Collaborate with sales, legal, and product teams on new offerings, pricing, and contract terms.",
+    "Support internal and external audits by providing revenue-related documentation and explanations."
+  ],
+  "Qualifications": [
+    "CA/CPA or M.Com with 4-6 years of experience in revenue accounting, preferably in a SaaS or EdTech company.",
+    "In-depth knowledge of revenue recognition standards (Ind AS 115/IFRS 15).",
+    "Experience with ERP systems and revenue automation tools (e.g., Zuora, Salesforce Revenue Cloud).",
+    "Strong analytical and communication skills.",
+    "Ability to work in a fast-paced, evolving industry."
+  ]
+}

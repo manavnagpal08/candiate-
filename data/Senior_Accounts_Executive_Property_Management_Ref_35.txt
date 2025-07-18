@@ -1,0 +1,20 @@
+{
+  "Job Title": "Senior Accounts Executive (Property Management) (Ref: 35)",
+  "Company": "Real Innovations 35",
+  "Job Summary": "A Real Estate Management company seeks a Senior Accounts Executive to manage financial operations for a portfolio of managed properties.",
+  "Key Responsibilities": [
+    "Manage accounts payable and receivable for multiple properties.",
+    "Process rent collections and reconcile tenant accounts.",
+    "Prepare property-specific financial statements and owner reports.",
+    "Handle common area maintenance (CAM) reconciliations.",
+    "Ensure compliance with property tax and other real estate-specific regulations.",
+    "Liaise with property managers and owners on financial matters."
+  ],
+  "Qualifications": [
+    "B.Com/M.Com degree.",
+    "4-6 years of experience in property management accounting.",
+    "Proficiency in property management software (e.g., Yardi, Tally).",
+    "Strong attention to detail and organizational skills.",
+    "Good communication skills."
+  ]
+}

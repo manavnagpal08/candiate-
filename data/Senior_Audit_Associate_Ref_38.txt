@@ -1,0 +1,20 @@
+{
+  "Job Title": "Senior Audit Associate (Ref: 38)",
+  "Company": "International Pvt. Ltd. 38",
+  "Job Summary": "An International Audit Network seeks a Senior Audit Associate to lead fieldwork and manage segments of audit engagements for diverse clients.",
+  "Key Responsibilities": [
+    "Lead fieldwork for financial statement audits for various clients across industries.",
+    "Supervise and review the work of junior audit staff, providing guidance and feedback.",
+    "Perform complex audit procedures, analytical reviews, and substantive testing.",
+    "Identify and communicate audit issues and potential risks to engagement managers.",
+    "Prepare comprehensive audit workpapers and draft audit reports.",
+    "Ensure adherence to international auditing standards (ISA) and firm methodologies."
+  ],
+  "Qualifications": [
+    "CA Inter or semi-qualified CA with 3-5 years of experience in statutory audit.",
+    "Strong understanding of auditing standards (SA, ISA) and financial reporting frameworks (IFRS/Ind AS).",
+    "Excellent analytical, problem-solving, and team leadership skills.",
+    "Proficiency in audit software and advanced MS Excel.",
+    "Good communication and interpersonal abilities for client interaction."
+  ]
+}

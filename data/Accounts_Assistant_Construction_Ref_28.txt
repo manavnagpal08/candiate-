@@ -1,0 +1,20 @@
+{
+  "Job Title": "Accounts Assistant (Construction) (Ref: 28)",
+  "Company": "Infrastructure Holdings 28",
+  "Job Summary": "An Infrastructure Development Co. seeks an Accounts Assistant to support accounting operations specific to large-scale construction projects.",
+  "Key Responsibilities": [
+    "Process project-related invoices, subcontractor bills, and material purchases.",
+    "Assist with tracking project costs against budgets.",
+    "Perform bank reconciliations for project-specific accounts.",
+    "Maintain fixed asset records for construction equipment.",
+    "Support GST compliance for construction services.",
+    "Organize and file project financial documents."
+  ],
+  "Qualifications": [
+    "B.Com degree.",
+    "1-2 years of experience in accounting, preferably in the construction sector.",
+    "Proficiency in Tally or construction accounting software.",
+    "Strong attention to detail.",
+    "Ability to work in a project-based environment."
+  ]
+}
